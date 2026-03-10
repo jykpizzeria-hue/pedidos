@@ -20,6 +20,8 @@
             --yellow:       #FFBF00;
             --yellow2:      #E6A800;
             --yellowLight:  #FFF5CC;
+            --blue:         #1565C0;
+            --blueLight:    #E3F0FF;
             --text:         #111111;
             --textMid:      #333333;
             --textMuted:    #777777;
@@ -86,7 +88,6 @@
         }
         .header-inner { position: relative; z-index: 1; }
 
-        /* Logo */
         .logo-wrap {
             display: inline-flex; align-items: center; justify-content: center; gap: 11px;
             animation: logoIn .7s cubic-bezier(.22,1,.36,1) both;
@@ -130,7 +131,6 @@
             margin-top: 5px;
             animation: logoIn .7s .35s cubic-bezier(.22,1,.36,1) both;
         }
-        .logo-svg-wrap { display: none; }
 
         /* ─── PRICE BAR ─── */
         .price-bar {
@@ -169,6 +169,7 @@
         .section:nth-child(4){ animation-delay:.21s; }
         .section:nth-child(5){ animation-delay:.26s; }
         .section:nth-child(6){ animation-delay:.31s; }
+        .section:nth-child(7){ animation-delay:.36s; }
         @keyframes sectionIn {
             from { opacity:0; transform:translateY(12px); }
             to   { opacity:1; transform:translateY(0); }
@@ -185,6 +186,7 @@
             width: 21px; height: 21px; display: grid; place-items: center;
             font-size: .62rem; font-weight: 800; font-family: 'Oswald', sans-serif; flex-shrink: 0;
         }
+        .sec-num.blue { background: var(--blue); }
         .sec-title::after {
             content: ''; flex: 1; height: 1.5px;
             background: linear-gradient(90deg, rgba(204,26,26,.35), transparent);
@@ -344,6 +346,92 @@
         .e-price { opacity: .55; font-weight: 500; font-size: .7rem; }
         .extra input:checked + label .e-price { opacity: .8; }
 
+        /* ─── BEBIDAS ─── */
+        .drinks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .drink-card { }
+        .drink-card input { display: none; }
+        .drink-card label {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 12px; width: 100%;
+            border: 1.5px solid var(--border); border-radius: 10px;
+            cursor: pointer;
+            transition: border-color .18s, background .18s, transform .18s, box-shadow .18s;
+            background: var(--surface); position: relative; overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .drink-card label::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--blue), #42A5F5);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform .26s cubic-bezier(.22,1,.36,1);
+            border-radius: 10px 10px 0 0;
+        }
+        .drink-card label:active { transform: scale(.96); }
+        .drink-card input:checked + label {
+            border-color: var(--blue); background: var(--blueLight);
+            box-shadow: 0 0 0 1.5px var(--blue), 0 5px 18px rgba(21,101,192,.15);
+            transform: translateY(-2px);
+        }
+        .drink-card input:checked + label::before { transform: scaleX(1); }
+        .drink-icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .drink-icon svg { width: 100%; height: 100%; }
+        .drink-info { display: flex; flex-direction: column; gap: 1px; }
+        .drink-name { font-size: .88rem; font-weight: 700; color: var(--text); font-family: 'Oswald', sans-serif; line-height: 1.1; }
+        .drink-sub  { font-size: .66rem; color: var(--textMuted); line-height: 1.2; }
+        .drink-price{ font-size: .82rem; font-weight: 800; color: var(--textMid); font-family: 'Oswald', sans-serif; margin-top: 3px; }
+        .drink-card input:checked + label .drink-price { color: var(--blue); }
+        .drink-card input:checked + label .drink-name  { color: var(--blue); }
+        .drink-qty-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 10px; gap: 8px;
+        }
+        .drink-qty-label {
+            font-size: .67rem; letter-spacing: .14em; text-transform: uppercase;
+            color: var(--textMuted); font-weight: 700; font-family: 'Oswald', sans-serif;
+        }
+        .drink-qty-ctrl {
+            display: flex; align-items: center;
+            border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
+            background: var(--white);
+        }
+        .drink-qty-btn {
+            background: var(--surface); border: none; cursor: pointer;
+            width: 34px; height: 36px; font-size: 1.1rem; font-weight: 700;
+            color: var(--text); display: grid; place-items: center;
+            transition: background .15s; -webkit-tap-highlight-color: transparent;
+            font-family: 'Oswald', sans-serif;
+        }
+        .drink-qty-btn:active { background: var(--border); }
+        .drink-qty-val {
+            width: 32px; text-align: center; font-family: 'Oswald', sans-serif;
+            font-size: 1rem; font-weight: 700; color: var(--blue);
+            border: none; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
+            background: var(--white); outline: none; height: 36px;
+        }
+        .drink-add-btn {
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            width: 100%; margin-top: 10px;
+            background: var(--blue); color: #fff;
+            border: none; padding: 12px; border-radius: 10px;
+            font-family: 'Oswald', sans-serif; font-size: .92rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+            transition: transform .14s, background .18s;
+            -webkit-tap-highlight-color: transparent;
+            position: relative; overflow: hidden;
+        }
+        .drink-add-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 50%);
+        }
+        .drink-add-btn:active { transform: scale(.97); background: #0D47A1; }
+        .drink-add-btn svg { width: 16px; height: 16px; }
+        .drink-add-btn.pop { animation: addPop .35s ease; }
+        .drink-none-hint {
+            font-size: .8rem; color: var(--textMuted); font-style: italic;
+            text-align: center; padding: 6px 0 2px;
+            font-family: 'Inter', sans-serif;
+        }
+
         /* ─── DELIVERY ─── */
         .delivery-box {
             background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
@@ -486,9 +574,7 @@
             animation: fadeRow .22s ease both;
         }
         .cart-item:last-child { border-bottom: none; }
-        .cart-item-icon {
-            font-size: 1.3rem; flex-shrink: 0; line-height: 1;
-        }
+        .cart-item-icon { font-size: 1.3rem; flex-shrink: 0; line-height: 1; }
         .cart-item-info { flex: 1; min-width: 0; }
         .cart-item-name {
             font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .9rem;
@@ -502,6 +588,7 @@
             font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .95rem;
             color: var(--red); flex-shrink: 0;
         }
+        .cart-item-price.drink-price-tag { color: var(--blue); }
         .cart-item-del {
             background: none; border: none; cursor: pointer; padding: 4px;
             color: var(--textMuted); flex-shrink: 0; line-height: 1;
@@ -518,7 +605,7 @@
         }
         .cart-total-row strong { font-size: 1.3rem; color: var(--red); }
 
-        /* ─── ADD TO CART BTN (inside body) ─── */
+        /* ─── ADD TO CART BTN ─── */
         .add-btn {
             display: flex; align-items: center; justify-content: center; gap: 8px;
             width: 100%; margin-top: 12px;
@@ -542,6 +629,49 @@
             40% { transform: scale(.95); }
             70% { transform: scale(1.03); }
             100%{ transform: scale(1); }
+        }
+
+        /* ─── CANTIDAD + NOTAS ─── */
+        .qty-notes-row {
+            display: flex; gap: 10px; align-items: flex-start; margin-top: 10px;
+        }
+        .qty-box { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+        .qty-label {
+            font-size: .67rem; letter-spacing: .14em; text-transform: uppercase;
+            color: var(--textMuted); font-weight: 700; font-family: 'Oswald', sans-serif;
+        }
+        .qty-ctrl {
+            display: flex; align-items: center;
+            border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
+            background: var(--white);
+        }
+        .qty-btn {
+            background: var(--surface); border: none; cursor: pointer;
+            width: 38px; height: 42px; font-size: 1.2rem; font-weight: 700;
+            color: var(--text); display: grid; place-items: center;
+            transition: background .15s; -webkit-tap-highlight-color: transparent;
+            font-family: 'Oswald', sans-serif;
+        }
+        .qty-btn:active { background: var(--border); }
+        .qty-val {
+            width: 36px; text-align: center; font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem; font-weight: 700; color: var(--red);
+            border: none; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
+            background: var(--white); outline: none; height: 42px;
+            -moz-appearance: textfield;
+        }
+        .qty-val::-webkit-inner-spin-button, .qty-val::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .notes-box { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .notes-input {
+            background: var(--white); border: 1.5px solid var(--border); border-radius: 8px;
+            padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: .85rem;
+            color: var(--text); outline: none; resize: none; height: 66px;
+            transition: border-color .18s, box-shadow .18s; width: 100%;
+        }
+        .notes-input::placeholder { color: var(--textMuted); opacity: .55; }
+        .notes-input:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(204,26,26,.1);
         }
 
         /* ─── STICKY FOOTER ─── */
@@ -580,7 +710,7 @@
             100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
         }
 
-        /* ─── MODAL bottom sheet ─── */
+        /* ─── MODAL ─── */
         .modal-overlay {
             position: fixed; inset: 0; z-index: 200;
             background: rgba(0,0,0,.5); backdrop-filter: blur(8px);
@@ -682,50 +812,6 @@
         .horario-texto { flex: 1; }
         .horario-hora { font-weight: 400; font-size: .72rem; opacity: .75; margin-left: 4px; }
 
-        /* ─── CANTIDAD + NOTAS ─── */
-        .qty-notes-row {
-            display: flex; gap: 10px; align-items: flex-start; margin-top: 10px;
-        }
-        .qty-box { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
-        .qty-label {
-            font-size: .67rem; letter-spacing: .14em; text-transform: uppercase;
-            color: var(--textMuted); font-weight: 700; font-family: 'Oswald', sans-serif;
-        }
-        .qty-ctrl {
-            display: flex; align-items: center;
-            border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
-            background: var(--white);
-        }
-        .qty-btn {
-            background: var(--surface); border: none; cursor: pointer;
-            width: 38px; height: 42px; font-size: 1.2rem; font-weight: 700;
-            color: var(--text); display: grid; place-items: center;
-            transition: background .15s; -webkit-tap-highlight-color: transparent;
-            font-family: 'Oswald', sans-serif;
-        }
-        .qty-btn:active { background: var(--border); }
-        .qty-val {
-            width: 36px; text-align: center; font-family: 'Oswald', sans-serif;
-            font-size: 1.1rem; font-weight: 700; color: var(--red);
-            border: none; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
-            background: var(--white); outline: none; height: 42px;
-            -moz-appearance: textfield;
-        }
-        .qty-val::-webkit-inner-spin-button, .qty-val::-webkit-outer-spin-button { -webkit-appearance: none; }
-        .notes-box { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-        .notes-input {
-            background: var(--white); border: 1.5px solid var(--border); border-radius: 8px;
-            padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: .85rem;
-            color: var(--text); outline: none; resize: none; height: 66px;
-            transition: border-color .18s, box-shadow .18s; width: 100%;
-        }
-        .notes-input::placeholder { color: var(--textMuted); opacity: .55; }
-        .notes-input:focus {
-            border-color: var(--red);
-            box-shadow: 0 0 0 3px rgba(204,26,26,.1);
-        }
-
-        /* ─── Desktop ─── */
         @media(min-width: 480px) {
             body { padding: 24px 16px 60px; }
             .container { border-radius: 14px; min-height: auto; }
@@ -770,7 +856,7 @@
     <!-- BODY -->
     <div class="body-wrap">
 
-        <!-- 0. Datos del cliente -->
+        <!-- 1. Datos del cliente -->
         <div class="section">
             <div class="sec-title"><span class="sec-num">1</span> Tus datos</div>
             <div class="client-box">
@@ -791,11 +877,10 @@
             </div>
         </div>
 
-        <!-- 1. Especialidad -->
+        <!-- 2. Especialidad -->
         <div class="section">
             <div class="sec-title"><span class="sec-num">2</span> Especialidad</div>
             <div class="pizza-grid">
-
                 <div class="card">
                     <input type="radio" name="pizza" id="p1" value="Tradicional" checked onchange="onPizzaChange()">
                     <label for="p1">
@@ -804,7 +889,6 @@
                         <span class="c-price" id="lp1">$3.00</span>
                     </label>
                 </div>
-
                 <div class="card">
                     <input type="radio" name="pizza" id="p2" value="4 Estaciones" onchange="onPizzaChange()">
                     <label for="p2">
@@ -814,7 +898,6 @@
                         <span class="c-price" id="lp2">$5.00</span>
                     </label>
                 </div>
-
                 <div class="card">
                     <input type="radio" name="pizza" id="p3" value="Especial" onchange="onPizzaChange()">
                     <label for="p3">
@@ -823,7 +906,6 @@
                         <span class="c-price" id="lp3">$6.00</span>
                     </label>
                 </div>
-
                 <div class="card">
                     <input type="radio" name="pizza" id="p4" value="Apetitosa" onchange="onPizzaChange()">
                     <label for="p4">
@@ -832,7 +914,6 @@
                         <span class="c-price" id="lp4">$4.50</span>
                     </label>
                 </div>
-
                 <div class="card">
                     <input type="radio" name="pizza" id="p5" value="Favorita" onchange="onPizzaChange()">
                     <label for="p5">
@@ -841,7 +922,6 @@
                         <span class="c-price" id="lp5">$6.00</span>
                     </label>
                 </div>
-
             </div>
 
             <!-- 4 Estaciones picker -->
@@ -854,7 +934,7 @@
             </div>
         </div>
 
-        <!-- 2. Tamaño -->
+        <!-- 3. Tamaño -->
         <div class="section">
             <div class="sec-title"><span class="sec-num">3</span> Tamaño</div>
             <div class="size-grid">
@@ -881,11 +961,10 @@
             </div>
         </div>
 
-        <!-- 3. Adicionales -->
+        <!-- 4. Adicionales -->
         <div class="section">
             <div class="sec-title"><span class="sec-num">4</span> Adicionales</div>
             <div class="extras-wrap">
-
                 <div class="extra">
                     <input type="checkbox" name="extra" id="e1" value="Aceitunas" onchange="calcTotal()">
                     <label for="e1">
@@ -956,11 +1035,10 @@
                         Vegetales <span class="e-price" id="ep10">+$0.50</span>
                     </label>
                 </div>
-
             </div>
         </div>
 
-        <!-- 4. Entrega -->
+        <!-- 5. Entrega -->
         <div class="section">
             <div class="sec-title"><span class="sec-num">5</span> Entrega</div>
             <div class="delivery-box">
@@ -988,8 +1066,6 @@
                         </label>
                     </div>
                 </div>
-
-                <!-- Location panel (solo con delivery) -->
                 <div class="location-panel" id="locationPanel">
                     <div class="location-inner">
                         <p class="loc-hint">
@@ -1006,7 +1082,7 @@
             </div>
         </div>
 
-        <!-- 5. Pago -->
+        <!-- 6. Pago -->
         <div class="section">
             <div class="sec-title"><span class="sec-num">6</span> Método de Pago</div>
             <div class="delivery-box">
@@ -1068,23 +1144,224 @@
             </div>
         </div>
 
-        <!-- Botón Agregar al carrito -->
+        <!-- Botón Agregar pizza al carrito -->
         <button class="add-btn" id="addBtn" onclick="agregarAlCarrito()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
-            Agregar al carrito
+            Agregar pizza al carrito
         </button>
+
+        <!-- ═══════════════════════════════════ -->
+        <!-- 7. BEBIDAS -->
+        <div class="section" style="margin-top:26px;">
+            <div class="sec-title"><span class="sec-num blue">7</span> Bebidas</div>
+
+            <div class="drinks-grid">
+
+                <!-- Personal 500ml -->
+                <div class="drink-card">
+                    <input type="radio" name="drink" id="dk1" value="Refresco Personal" onchange="onDrinkChange()">
+                    <label for="dk1">
+                        <div class="drink-icon">
+                            <!-- Lata de refresco -->
+                            <svg viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="8" y="10" width="24" height="38" rx="5" fill="#E31A1A"/>
+                                <rect x="8" y="10" width="24" height="38" rx="5" fill="url(#canGrad1)"/>
+                                <ellipse cx="20" cy="10" rx="12" ry="4" fill="#CC1111"/>
+                                <ellipse cx="20" cy="48" rx="12" ry="4" fill="#BB0F0F"/>
+                                <rect x="14" y="6" width="12" height="5" rx="2.5" fill="#CCCCCC"/>
+                                <rect x="17" y="3" width="6" height="4" rx="1.5" fill="#AAAAAA"/>
+                                <!-- White wave -->
+                                <path d="M10 28 Q16 24 20 28 Q24 32 30 28" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                <path d="M10 32 Q16 28 20 32 Q24 36 30 32" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" opacity=".5"/>
+                                <defs>
+                                    <linearGradient id="canGrad1" x1="8" y1="10" x2="32" y2="10" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+                                        <stop offset="40%" stop-color="rgba(255,255,255,0)"/>
+                                        <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="drink-info">
+                            <div class="drink-name">Cola / Sabor</div>
+                            <div class="drink-sub">Personal · 500 ml</div>
+                            <div class="drink-price">$0.50</div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- 1 Litro -->
+                <div class="drink-card">
+                    <input type="radio" name="drink" id="dk2" value="Refresco 1L" onchange="onDrinkChange()">
+                    <label for="dk2">
+                        <div class="drink-icon">
+                            <!-- Botella 1L -->
+                            <svg viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 4 L16 10 Q8 14 8 22 L8 50 Q8 54 12 54 L28 54 Q32 54 32 50 L32 22 Q32 14 24 10 L24 4 Z" fill="#E31A1A"/>
+                                <path d="M16 4 L16 10 Q8 14 8 22 L8 50 Q8 54 12 54 L28 54 Q32 54 32 50 L32 22 Q32 14 24 10 L24 4 Z" fill="url(#bottleGrad1)"/>
+                                <rect x="15" y="2" width="10" height="5" rx="2" fill="#BBBBBB"/>
+                                <rect x="16" y="1" width="8" height="3" rx="1.5" fill="#999999"/>
+                                <!-- Highlight -->
+                                <path d="M12 22 L12 50" stroke="rgba(255,255,255,0.3)" stroke-width="3" stroke-linecap="round"/>
+                                <!-- Wave -->
+                                <path d="M11 35 Q17 31 20 35 Q23 39 29 35" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="bottleGrad1" x1="8" y1="0" x2="32" y2="0" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
+                                        <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+                                        <stop offset="100%" stop-color="rgba(0,0,0,0.2)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="drink-info">
+                            <div class="drink-name">Cola / Sabor</div>
+                            <div class="drink-sub">1 Litro</div>
+                            <div class="drink-price">$1.00</div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- 1.5 Litros -->
+                <div class="drink-card">
+                    <input type="radio" name="drink" id="dk3" value="Refresco 1.5L" onchange="onDrinkChange()">
+                    <label for="dk3">
+                        <div class="drink-icon">
+                            <!-- Botella 1.5L (más ancha) -->
+                            <svg viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 4 L15 10 Q6 14 6 23 L6 50 Q6 55 11 55 L29 55 Q34 55 34 50 L34 23 Q34 14 25 10 L25 4 Z" fill="#E31A1A"/>
+                                <path d="M15 4 L15 10 Q6 14 6 23 L6 50 Q6 55 11 55 L29 55 Q34 55 34 50 L34 23 Q34 14 25 10 L25 4 Z" fill="url(#bottleGrad2)"/>
+                                <rect x="14" y="2" width="12" height="5" rx="2" fill="#BBBBBB"/>
+                                <rect x="15" y="1" width="10" height="3" rx="1.5" fill="#999999"/>
+                                <path d="M11 24 L11 50" stroke="rgba(255,255,255,0.3)" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M10 37 Q17 33 20 37 Q23 41 30 37" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                <path d="M10 42 Q17 38 20 42 Q23 46 30 42" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" opacity=".4"/>
+                                <defs>
+                                    <linearGradient id="bottleGrad2" x1="6" y1="0" x2="34" y2="0" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
+                                        <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+                                        <stop offset="100%" stop-color="rgba(0,0,0,0.2)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="drink-info">
+                            <div class="drink-name">Cola / Sabor</div>
+                            <div class="drink-sub">1½ Litros</div>
+                            <div class="drink-price">$1.50</div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- 2 Litros -->
+                <div class="drink-card">
+                    <input type="radio" name="drink" id="dk4" value="Refresco 2L" onchange="onDrinkChange()">
+                    <label for="dk4">
+                        <div class="drink-icon">
+                            <!-- Botella 2L (más grande) -->
+                            <svg viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 3 L14 9 Q5 13 5 22 L5 51 Q5 57 11 57 L29 57 Q35 57 35 51 L35 22 Q35 13 26 9 L26 3 Z" fill="#E31A1A"/>
+                                <path d="M14 3 L14 9 Q5 13 5 22 L5 51 Q5 57 11 57 L29 57 Q35 57 35 51 L35 22 Q35 13 26 9 L26 3 Z" fill="url(#bottleGrad3)"/>
+                                <rect x="13" y="1" width="14" height="5" rx="2" fill="#BBBBBB"/>
+                                <rect x="14" y="0" width="12" height="3" rx="1.5" fill="#999999"/>
+                                <path d="M10 23 L10 51" stroke="rgba(255,255,255,0.3)" stroke-width="3.5" stroke-linecap="round"/>
+                                <path d="M9 34 Q17 30 20 34 Q23 38 31 34" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                <path d="M9 40 Q17 36 20 40 Q23 44 31 40" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" opacity=".4"/>
+                                <path d="M9 46 Q17 42 20 46 Q23 50 31 46" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" opacity=".25"/>
+                                <defs>
+                                    <linearGradient id="bottleGrad3" x1="5" y1="0" x2="35" y2="0" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
+                                        <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+                                        <stop offset="100%" stop-color="rgba(0,0,0,0.2)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="drink-info">
+                            <div class="drink-name">Cola / Sabor</div>
+                            <div class="drink-sub">2 Litros</div>
+                            <div class="drink-price">$2.00</div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Jugo Natural -->
+                <div class="drink-card">
+                    <input type="radio" name="drink" id="dk5" value="Jugo Natural" onchange="onDrinkChange()">
+                    <label for="dk5">
+                        <div class="drink-icon">
+                            <!-- Vaso con jugo -->
+                            <svg viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 14 L13 52 Q13 56 20 56 Q27 56 27 52 L30 14 Z" fill="#F47B20"/>
+                                <path d="M10 14 L13 52 Q13 56 20 56 Q27 56 27 52 L30 14 Z" fill="url(#juiceGrad)"/>
+                                <!-- Straw -->
+                                <rect x="22" y="4" width="3" height="30" rx="1.5" fill="#E8E8E8"/>
+                                <rect x="22" y="4" width="3" height="30" rx="1.5" fill="url(#strawGrad)"/>
+                                <!-- Ice cubes suggestion -->
+                                <rect x="13" y="18" width="6" height="6" rx="1" fill="rgba(255,255,255,0.4)"/>
+                                <rect x="20" y="22" width="5" height="5" rx="1" fill="rgba(255,255,255,0.3)"/>
+                                <!-- Rim -->
+                                <rect x="9" y="12" width="22" height="4" rx="2" fill="#D4690F"/>
+                                <!-- Highlight -->
+                                <path d="M14 20 L14 48" stroke="rgba(255,255,255,0.25)" stroke-width="3" stroke-linecap="round"/>
+                                <!-- Slice on rim -->
+                                <circle cx="32" cy="12" r="6" fill="#F5A623"/>
+                                <path d="M32 6 L32 18 M26 12 L38 12" stroke="#E8901A" stroke-width="1" stroke-linecap="round"/>
+                                <circle cx="32" cy="12" r="3" fill="#FFD580"/>
+                                <defs>
+                                    <linearGradient id="juiceGrad" x1="10" y1="0" x2="30" y2="0" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+                                        <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+                                    </linearGradient>
+                                    <linearGradient id="strawGrad" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.4)"/>
+                                        <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="drink-info">
+                            <div class="drink-name">Jugo Natural</div>
+                            <div class="drink-sub">Fruta del día</div>
+                            <div class="drink-price">$1.50</div>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- Hint cuando no hay bebida seleccionada -->
+            <p class="drink-none-hint" id="drinkNoneHint">Selecciona una bebida para agregarla (opcional)</p>
+
+            <!-- Cantidad bebida -->
+            <div class="drink-qty-row" id="drinkQtyRow" style="display:none;">
+                <span class="drink-qty-label">Cantidad</span>
+                <div class="drink-qty-ctrl">
+                    <button class="drink-qty-btn" onclick="changeDrinkQty(-1)">−</button>
+                    <input class="drink-qty-val" id="drinkQtyVal" type="number" value="1" min="1" max="20" readonly>
+                    <button class="drink-qty-btn" onclick="changeDrinkQty(1)">+</button>
+                </div>
+            </div>
+
+            <!-- Botón agregar bebida -->
+            <button class="drink-add-btn" id="drinkAddBtn" onclick="agregarBebida()" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+                Agregar bebida al carrito
+            </button>
+        </div>
 
         <!-- Carrito -->
         <div class="cart-section" id="cartSection" style="display:none;">
             <div class="cart-header">
                 <span class="cart-title">
-                    🛒 Tu pedido
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+                    Tu pedido
                     <span class="cart-count" id="cartCount">0</span>
                 </span>
                 <button onclick="vaciarCarrito()" style="background:none;border:none;font-size:.72rem;color:var(--textMuted);cursor:pointer;font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;">Vaciar</button>
             </div>
             <div id="cartItems">
-                <div class="cart-empty">Aún no hay pizzas en el carrito</div>
+                <div class="cart-empty">Aún no hay artículos en el carrito</div>
             </div>
             <div class="cart-total-row" id="cartTotalRow" style="display:none;">
                 <span>Total pedido</span><strong id="cartTotal">$0.00</strong>
@@ -1147,6 +1424,29 @@
     };
     const SIZE_INDEX = { 'Mini':0, 'Mediana':1, 'Grande':2, 'Tamaño JyK':3, 'Extra Familiar':4 };
 
+    // ── DRINK PRICES ──
+    const DRINK_PRICES = {
+        'Refresco Personal': 0.50,
+        'Refresco 1L':       1.00,
+        'Refresco 1.5L':     1.50,
+        'Refresco 2L':       2.00,
+        'Jugo Natural':      1.50,
+    };
+    const DRINK_LABELS = {
+        'Refresco Personal': 'Cola/Sabor Personal (500ml)',
+        'Refresco 1L':       'Cola/Sabor 1L',
+        'Refresco 1.5L':     'Cola/Sabor 1.5L',
+        'Refresco 2L':       'Cola/Sabor 2L',
+        'Jugo Natural':      'Jugo Natural',
+    };
+    const DRINK_ICONS = {
+        'Refresco Personal': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--red)"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+        'Refresco 1L':       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--red)"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><line x1="10" y1="11" x2="14" y2="11"/></svg>`,
+        'Refresco 1.5L':     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--red)"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><line x1="10" y1="11" x2="14" y2="11"/><line x1="10" y1="14" x2="14" y2="14"/></svg>`,
+        'Refresco 2L':       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--red)"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><line x1="10" y1="11" x2="14" y2="11"/><line x1="10" y1="14" x2="14" y2="14"/><line x1="10" y1="17" x2="14" y2="17"/></svg>`,
+        'Jugo Natural':      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:#F47B20"><path d="M9 2h6l1 3H8L9 2z"/><path d="M8 5v14a1 1 0 001 1h6a1 1 0 001-1V5"/><path d="M12 5v4"/><circle cx="12" cy="12" r="2"/></svg>`,
+    };
+
     const INGREDIENTS = [
         { id:'ei1', value:'Pepperoni', svg:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="9.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/>'},
         { id:'ei2', value:'Maíz',      svg:'<path d="M12 21C9 21 7 17 7 13C7 8 9 4 12 3C15 4 17 8 17 13C17 17 15 21 12 21Z"/><line x1="9.5" y1="8" x2="14.5" y2="8"/><line x1="9" y1="11" x2="15" y2="11"/>'},
@@ -1173,7 +1473,7 @@
     });
 
     // ── CARRITO ──
-    let carrito = []; // [{name, size, extras, ingr, price, subtotal}]
+    let carrito = []; // items: pizza + bebidas mezclados
 
     // ── Helpers ──
     const getSelectedPizza = () => document.querySelector('input[name="pizza"]:checked')?.value ?? 'Tradicional';
@@ -1189,6 +1489,7 @@
     const isZelle          = () => document.querySelector('input[name="pago"]:checked')?.value === 'Zelle';
     const getPayment       = () => document.querySelector('input[name="pago"]:checked')?.value ?? 'Efectivo';
     const getEstIngredients = () => [...document.querySelectorAll('input[name="estIngr"]:checked')].map(el => el.value);
+    const getSelectedDrink = () => document.querySelector('input[name="drink"]:checked')?.value ?? null;
 
     function getDelivery() {
         const v = document.querySelector('input[name="delivery"]:checked')?.value ?? 'sitio';
@@ -1240,6 +1541,13 @@
         });
         calcTotal();
     }
+    function onDrinkChange() {
+        const selected = getSelectedDrink();
+        const hasSelection = !!selected;
+        document.getElementById('drinkNoneHint').style.display = hasSelection ? 'none' : '';
+        document.getElementById('drinkQtyRow').style.display   = hasSelection ? '' : 'none';
+        document.getElementById('drinkAddBtn').style.display   = hasSelection ? '' : 'none';
+    }
 
     // ── GPS Location ──
     function getGPSLocation() {
@@ -1263,7 +1571,7 @@
         );
     }
 
-    // ── Animated counter (breakdown subtotal only) ──
+    // ── Animated counter ──
     let displayedVal = 0, raf = null;
     function animateTo(target) {
         if (raf) cancelAnimationFrame(raf);
@@ -1304,7 +1612,7 @@
         animateTo(sub);
     }
 
-    // ── Cantidad ──
+    // ── Cantidad pizza ──
     function changeQty(delta) {
         const el = document.getElementById('qtyVal');
         const v = Math.max(1, Math.min(10, parseInt(el.value || 1) + delta));
@@ -1312,6 +1620,14 @@
         calcTotal();
     }
     function getQty() { return Math.max(1, parseInt(document.getElementById('qtyVal').value || 1)); }
+
+    // ── Cantidad bebida ──
+    function changeDrinkQty(delta) {
+        const el = document.getElementById('drinkQtyVal');
+        const v = Math.max(1, Math.min(20, parseInt(el.value || 1) + delta));
+        el.value = v;
+    }
+    function getDrinkQty() { return Math.max(1, parseInt(document.getElementById('drinkQtyVal').value || 1)); }
 
     // ── Agregar pizza al carrito ──
     function agregarAlCarrito() {
@@ -1333,7 +1649,7 @@
         const unitPrice = pizzaP + extrasP;
         const subtotal  = unitPrice * qty;
 
-        carrito.push({ id: Date.now(), pizza, size, sizeIdx, extras, ingr, qty, notes, unitPrice, subtotal });
+        carrito.push({ id: Date.now(), type: 'pizza', pizza, size, sizeIdx, extras, ingr, qty, notes, unitPrice, subtotal });
         renderCarrito();
         resetSeleccion();
 
@@ -1341,7 +1657,31 @@
         btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
     }
 
-    // ── Reset form to defaults ──
+    // ── Agregar bebida al carrito ──
+    function agregarBebida() {
+        const drink = getSelectedDrink();
+        if (!drink) return;
+        const qty      = getDrinkQty();
+        const unitPrice = DRINK_PRICES[drink];
+        const subtotal  = unitPrice * qty;
+        const label    = DRINK_LABELS[drink];
+        const icon     = DRINK_ICONS[drink];
+
+        carrito.push({ id: Date.now(), type: 'drink', drink, label, icon, qty, unitPrice, subtotal });
+        renderCarrito();
+
+        // Reset drink selection
+        document.querySelectorAll('input[name="drink"]:checked').forEach(el => el.checked = false);
+        document.getElementById('drinkQtyVal').value = 1;
+        document.getElementById('drinkNoneHint').style.display = '';
+        document.getElementById('drinkQtyRow').style.display   = 'none';
+        document.getElementById('drinkAddBtn').style.display   = 'none';
+
+        const btn = document.getElementById('drinkAddBtn');
+        btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+    }
+
+    // ── Reset pizza form ──
     function resetSeleccion() {
         document.querySelector('input[name="pizza"][value="Tradicional"]').checked = true;
         document.querySelector('input[name="size"][value="Mini"]').checked = true;
@@ -1358,19 +1698,19 @@
 
     // ── Render carrito ──
     function renderCarrito() {
-        const section = document.getElementById('cartSection');
-        const itemsEl = document.getElementById('cartItems');
-        const countEl = document.getElementById('cartCount');
+        const section    = document.getElementById('cartSection');
+        const itemsEl    = document.getElementById('cartItems');
+        const countEl    = document.getElementById('cartCount');
         const totalRowEl = document.getElementById('cartTotalRow');
-        const cartTotalEl = document.getElementById('cartTotal');
-        const orderBtn = document.getElementById('orderBtn');
+        const cartTotalEl= document.getElementById('cartTotal');
+        const orderBtn   = document.getElementById('orderBtn');
         const footerHint = document.getElementById('footerHint');
 
         section.style.display = carrito.length ? '' : 'none';
         countEl.textContent = carrito.length;
 
         if (!carrito.length) {
-            itemsEl.innerHTML = '<div class="cart-empty">Aún no hay pizzas en el carrito</div>';
+            itemsEl.innerHTML = '<div class="cart-empty">Aún no hay artículos en el carrito</div>';
             totalRowEl.style.display = 'none';
             orderBtn.style.display = 'none';
             footerHint.style.display = '';
@@ -1378,13 +1718,30 @@
         }
 
         itemsEl.innerHTML = carrito.map((item, idx) => {
+            if (item.type === 'drink') {
+                const qtyBadge = item.qty > 1 ? `<span style="background:var(--blue);color:#fff;border-radius:4px;padding:0 5px;font-size:.7rem;font-weight:700;margin-left:5px;">x${item.qty}</span>` : '';
+                return `<div class="cart-item">
+                    <div class="cart-item-icon" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;">${item.icon}</div>
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.label}${qtyBadge}</div>
+                        <div class="cart-item-detail">Bebida · ${fmt(item.unitPrice)} c/u</div>
+                    </div>
+                    <div class="cart-item-price drink-price-tag">${fmt(item.subtotal)}</div>
+                    <button class="cart-item-del" onclick="eliminarItem(${idx})" title="Eliminar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>`;
+            }
+            // pizza
             let detail = item.size;
             if (item.ingr.length)   detail += ' · ' + item.ingr.join(', ');
             if (item.extras.length) detail += ' · +' + item.extras.join(', +');
             if (item.notes)         detail += ` · 📝 ${item.notes}`;
             const qtyBadge = item.qty > 1 ? `<span style="background:var(--yellow);color:#111;border-radius:4px;padding:0 5px;font-size:.7rem;font-weight:700;margin-left:5px;">x${item.qty}</span>` : '';
             return `<div class="cart-item">
-                <div class="cart-item-icon">🍕</div>
+                <div class="cart-item-icon" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:var(--red)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 010 20"/><circle cx="8" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="16" cy="9" r=".8" fill="currentColor"/><circle cx="8" cy="15" r=".8" fill="currentColor"/></svg>
+                </div>
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.pizza}${qtyBadge}</div>
                     <div class="cart-item-detail">${detail}</div>
@@ -1396,20 +1753,16 @@
             </div>`;
         }).join('');
 
-        const totalPizzas = carrito.reduce((s, it) => s + it.subtotal, 0);
-        cartTotalEl.textContent = fmt(totalPizzas);
+        const totalItems = carrito.reduce((s, it) => s + it.subtotal, 0);
+        cartTotalEl.textContent = fmt(totalItems);
         totalRowEl.style.display = '';
         orderBtn.style.display = '';
         footerHint.style.display = 'none';
 
-        // Scroll to cart
         section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function eliminarItem(idx) {
-        carrito.splice(idx, 1);
-        renderCarrito();
-    }
+    function eliminarItem(idx) { carrito.splice(idx, 1); renderCarrito(); }
     function vaciarCarrito() {
         if (!carrito.length) return;
         if (confirm('¿Vaciar el carrito?')) { carrito = []; renderCarrito(); }
@@ -1422,7 +1775,10 @@
         if (phone)       msg += `📞 *Teléfono:* ${phone}\n`;
         msg += '\n';
 
-        carrito.forEach((item, i) => {
+        const pizzas  = carrito.filter(it => it.type === 'pizza');
+        const bebidas = carrito.filter(it => it.type === 'drink');
+
+        pizzas.forEach((item, i) => {
             const qtyStr = item.qty > 1 ? ` x${item.qty}` : '';
             msg += `*Pizza ${i+1}: ${item.pizza}${qtyStr} — ${item.size}*\n`;
             if (item.ingr.length)   msg += `  Ingredientes: ${item.ingr.join(', ')}\n`;
@@ -1431,10 +1787,19 @@
             msg += `  Subtotal: ${fmt(item.subtotal)}\n\n`;
         });
 
-        const totalPizzas = carrito.reduce((s, it) => s + it.subtotal, 0);
+        if (bebidas.length) {
+            msg += `🥤 *Bebidas:*\n`;
+            bebidas.forEach(b => {
+                const qStr = b.qty > 1 ? ` x${b.qty}` : '';
+                msg += `  🥤 ${b.label}${qStr} — ${fmt(b.subtotal)}\n`;
+            });
+            msg += '\n';
+        }
+
+        const totalItems  = carrito.reduce((s, it) => s + it.subtotal, 0);
         const zelleExtra  = isZelle() ? 1 : 0;
         const boxPrice    = needsBox() ? 1 : 0;
-        const total       = totalPizzas + boxPrice + zelleExtra;
+        const total       = totalItems + boxPrice + zelleExtra;
 
         msg += `📦 *Entrega:* ${delivery.value}${boxPrice ? ' (+$1.00 caja)' : ''}\n`;
         if (isDelivery() && location) msg += `📍 *Ubicación:* ${location}\n`;
@@ -1474,12 +1839,15 @@
         const pago       = getPayment();
         const zelleExtra = isZelle() ? 1 : 0;
         const boxPrice   = needsBox() ? 1 : 0;
-        const totalPizzas = carrito.reduce((s, it) => s + it.subtotal, 0);
-        const total = totalPizzas + boxPrice + zelleExtra;
+        const totalItems = carrito.reduce((s, it) => s + it.subtotal, 0);
+        const total = totalItems + boxPrice + zelleExtra;
 
-        // Build modal summary
         let html = `<div class="m-row"><span>Cliente</span><strong>${clientName}${phone ? ' · ' + phone : ''}</strong></div>`;
-        carrito.forEach((item, i) => {
+
+        const pizzas  = carrito.filter(it => it.type === 'pizza');
+        const bebidas = carrito.filter(it => it.type === 'drink');
+
+        pizzas.forEach((item, i) => {
             const qtyStr = item.qty > 1 ? ` x${item.qty}` : '';
             let detail = item.size;
             if (item.ingr.length)   detail += ', ' + item.ingr.join(', ');
@@ -1487,6 +1855,12 @@
             if (item.notes)         detail += ` · "${item.notes}"`;
             html += `<div class="m-row"><span>Pizza ${i+1}${qtyStr}</span><strong>${item.pizza} · ${detail} · ${fmt(item.subtotal)}</strong></div>`;
         });
+
+        bebidas.forEach((b, i) => {
+            const qStr = b.qty > 1 ? ` x${b.qty}` : '';
+            html += `<div class="m-row"><span>Bebida ${i+1}${qStr}</span><strong>${b.label} · ${fmt(b.subtotal)}</strong></div>`;
+        });
+
         html += `<div class="m-row"><span>Entrega</span><strong>${delivery.value}${boxPrice ? ' · $1.00' : ''}</strong></div>`;
         if (isDelivery() && location) html += `<div class="m-row"><span>Ubicación</span><strong>${location.slice(0,45)}${location.length>45?'…':''}</strong></div>`;
         html += `<div class="m-row"><span>Pago</span><strong>${pago}${zelleExtra ? ' · +$1.00' : ''}</strong></div>`;
@@ -1507,22 +1881,19 @@
     document.getElementById('clientLastName').addEventListener('input', function(){ this.classList.remove('error'); });
     document.getElementById('locationText').addEventListener('input', function(){ this.classList.remove('error'); });
 
-
-    // ── Horario (edita aquí los turnos de apertura) ──
-    // Formato: [horaAbre, horaCierra] en decimal. null = cerrado ese día.
+    // ── Horario ──
     const HORARIO = {
-        0: [17.5, 25.5],   // Domingo  5:30pm – 1:30am (lunes)
-        1: [17.5, 24.5],   // Lunes    5:30pm – 12:30am
-        2: [17.5, 24.5],   // Martes
-        3: [17.5, 24.5],   // Miércoles
-        4: [17.5, 24.5],   // Jueves
-        5: [17.5, 25.5],   // Viernes  5:30pm – 1:30am
-        6: [17.5, 25.5],   // Sábado   5:30pm – 1:30am
+        0: [17.5, 25.5],
+        1: [17.5, 24.5],
+        2: [17.5, 24.5],
+        3: [17.5, 24.5],
+        4: [17.5, 24.5],
+        5: [17.5, 25.5],
+        6: [17.5, 25.5],
     };
     const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
     function fmtH12(decimal) {
-        // Convierte hora decimal (puede ser >24 para madrugada del día siguiente)
         const h24 = decimal % 24;
         const hh  = Math.floor(h24);
         const mm  = h24 % 1 === 0 ? '00' : '30';
@@ -1534,9 +1905,7 @@
     function actualizarHorario() {
         const now    = new Date();
         const dia    = now.getDay();
-        // hora actual en decimal, considerando madrugada como extensión del día anterior
         let horaActual = now.getHours() + now.getMinutes() / 60;
-        // Si es madrugada (0–4am), tratarlo como hora >24 del día anterior
         const diaConsulta = horaActual < 4 ? (dia === 0 ? 6 : dia - 1) : dia;
         if (horaActual < 4) horaActual += 24;
 
