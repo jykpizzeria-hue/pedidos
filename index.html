@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Pizzería JyK – Menú</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:           #FFFFFF;
+            --surface:      #F4F4F4;
+            --surfaceHover: #EBEBEB;
+            --panel:        #F4F4F4;
+            --border:       #DDDDDD;
+            --borderActive: #CC1A1A;
+            --red:          #CC1A1A;
+            --red2:         #A51414;
+            --yellow:       #FFBF00;
+            --yellow2:      #E6A800;
+            --yellowLight:  #FFF5CC;
+            --text:         #111111;
+            --textMid:      #333333;
+            --textMuted:    #777777;
+            --white:        #FFFFFF;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #EEEEEE;
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 70% 35% at 50% 0%, rgba(204,26,26,.1) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 50% at 100% 100%, rgba(255,191,0,.08) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative; z-index: 1;
+            max-width: 480px; width: 100%;
+            background: var(--bg);
+            min-height: 100vh;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0,0,0,.15);
+            animation: rise .55s cubic-bezier(.22,1,.36,1) both;
+        }
+        @keyframes rise {
+            from { opacity:0; transform:translateY(24px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ─── HEADER ─── */
+        header {
+            background: var(--red);
+            padding: 22px 20px 18px;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 90% 70% at 50% -10%, rgba(255,208,0,.25) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 60% at 0% 120%, rgba(0,0,0,.3) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 60% at 100% 120%, rgba(0,0,0,.25) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        header::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(
+                -52deg, transparent, transparent 18px,
+                rgba(255,255,255,.025) 18px, rgba(255,255,255,.025) 20px
+            );
+            pointer-events: none;
+        }
+        .header-inner { position: relative; z-index: 1; }
+
+        /* Logo */
+        .logo-wrap {
+            display: inline-flex; align-items: center; justify-content: center; gap: 11px;
+            animation: logoIn .7s cubic-bezier(.22,1,.36,1) both;
+        }
+        @keyframes logoIn {
+            from { opacity:0; transform: scale(.8) translateY(-10px); }
+            to   { opacity:1; transform: scale(1) translateY(0); }
+        }
+        .logo-pizza-icon {
+            font-size: 2.5rem; line-height: 1;
+            display: block;
+            animation: spinIn .9s cubic-bezier(.22,1,.36,1) both, pizzaBob 3s ease-in-out 1.2s infinite;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,.4));
+        }
+        @keyframes spinIn {
+            from { opacity:0; transform: rotate(-180deg) scale(.3); }
+            to   { opacity:1; transform: rotate(0deg) scale(1); }
+        }
+        @keyframes pizzaBob {
+            0%,100% { transform: translateY(0) rotate(-3deg); }
+            50%      { transform: translateY(-5px) rotate(8deg); }
+        }
+        .logo-text-block {
+            display: flex; flex-direction: column; align-items: flex-start;
+            animation: logoIn .7s .18s cubic-bezier(.22,1,.36,1) both;
+        }
+        .logo-pizzeria {
+            font-family: 'Oswald', sans-serif; font-weight: 500; font-size: .85rem;
+            color: var(--yellow); letter-spacing: .4em; text-transform: uppercase;
+            line-height: 1; margin-bottom: 0;
+            text-shadow: 0 1px 6px rgba(0,0,0,.3);
+        }
+        .logo-jyk {
+            font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 3rem;
+            color: #FFFFFF; letter-spacing: .04em; line-height: 1;
+            text-shadow: 0 3px 14px rgba(0,0,0,.45), 0 0 28px rgba(255,191,0,.15);
+        }
+        .logo-tagline {
+            font-family: 'Oswald', sans-serif; font-size: .62rem; font-weight: 400;
+            color: rgba(255,230,140,.6); letter-spacing: .3em; text-transform: uppercase;
+            margin-top: 5px;
+            animation: logoIn .7s .35s cubic-bezier(.22,1,.36,1) both;
+        }
+        .logo-svg-wrap { display: none; }
+
+        /* ─── PRICE BAR ─── */
+        .price-bar {
+            position: sticky; top: 0; z-index: 80;
+            background: var(--white);
+            border-bottom: 2.5px solid var(--red);
+            padding: 0 18px;
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            box-shadow: 0 2px 12px rgba(204,26,26,.12);
+        }
+        .pb-label {
+            font-size: .67rem; letter-spacing: .2em; text-transform: uppercase;
+            color: var(--textMuted); padding: 12px 0; font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+        }
+        .pb-right { display: flex; align-items: baseline; gap: 3px; }
+        .pb-currency { font-size: .88rem; color: var(--red); font-weight: 800; font-family: 'Oswald', sans-serif; }
+        #priceDisplay {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.85rem; font-weight: 700; color: var(--red);
+            min-width: 68px; text-align: right; display: inline-block;
+        }
+        #priceDisplay.bump { animation: bump .38s ease; }
+        @keyframes bump {
+            0%   { transform:scale(1);    color:var(--red); }
+            40%  { transform:scale(1.18); color:var(--yellow2); }
+            100% { transform:scale(1);    color:var(--red); }
+        }
+
+        /* ─── BODY ─── */
+        .body-wrap { padding: 22px 14px 130px; }
+        .section { margin-bottom: 26px; animation: sectionIn .45s ease both; }
+        .section:nth-child(1){ animation-delay:.06s; }
+        .section:nth-child(2){ animation-delay:.11s; }
+        .section:nth-child(3){ animation-delay:.16s; }
+        .section:nth-child(4){ animation-delay:.21s; }
+        .section:nth-child(5){ animation-delay:.26s; }
+        .section:nth-child(6){ animation-delay:.31s; }
+        @keyframes sectionIn {
+            from { opacity:0; transform:translateY(12px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .sec-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: .98rem; font-weight: 800;
+            color: var(--text); letter-spacing: .18em; text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 11px;
+        }
+        .sec-num {
+            background: var(--red); color: #fff; border-radius: 50%;
+            width: 21px; height: 21px; display: grid; place-items: center;
+            font-size: .62rem; font-weight: 800; font-family: 'Oswald', sans-serif; flex-shrink: 0;
+        }
+        .sec-title::after {
+            content: ''; flex: 1; height: 1.5px;
+            background: linear-gradient(90deg, rgba(204,26,26,.35), transparent);
+        }
+
+        /* ─── CLIENT INFO ─── */
+        .client-box {
+            background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+            padding: 14px 13px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .field-group { display: flex; flex-direction: column; gap: 5px; }
+        .field-label {
+            font-size: .67rem; letter-spacing: .14em; text-transform: uppercase;
+            color: var(--textMuted); font-weight: 700; font-family: 'Oswald', sans-serif;
+        }
+        .field-input {
+            background: var(--white); border: 1.5px solid var(--border); border-radius: 8px;
+            padding: 11px 13px; font-family: 'Inter', sans-serif; font-size: .92rem;
+            color: var(--text); outline: none;
+            transition: border-color .18s, box-shadow .18s;
+            width: 100%;
+        }
+        .field-input::placeholder { color: var(--textMuted); opacity: .6; }
+        .field-input:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(204,26,26,.1);
+        }
+
+        /* ─── PIZZA CARDS ─── */
+        .pizza-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: stretch; }
+        .card { display: flex; }
+        .card input { display: none; }
+        .card label {
+            display: flex; flex-direction: column; align-items: flex-start;
+            padding: 14px 12px 12px; width: 100%;
+            border: 1.5px solid var(--border); border-radius: 10px;
+            cursor: pointer;
+            transition: border-color .18s, background .18s, transform .18s, box-shadow .18s;
+            background: var(--surface); gap: 3px; position: relative; overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card label::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--yellow));
+            transform: scaleX(0); transform-origin: left;
+            transition: transform .26s cubic-bezier(.22,1,.36,1);
+            border-radius: 10px 10px 0 0;
+        }
+        .card label:active { transform: scale(.96); }
+        .card input:checked + label {
+            border-color: var(--red); background: var(--yellowLight);
+            box-shadow: 0 0 0 1.5px var(--red), 0 5px 18px rgba(204,26,26,.15);
+            transform: translateY(-2px);
+        }
+        .card input:checked + label::before { transform: scaleX(1); }
+        .c-name  { font-size: .9rem; font-weight: 700; color: var(--text); font-family: 'Oswald', sans-serif; }
+        .c-desc  { font-size: .7rem; color: var(--textMuted); line-height: 1.3; margin-top: 2px; }
+        .c-price { font-size: .9rem; font-weight: 800; color: var(--textMid); margin-top: 6px; font-family: 'Oswald', sans-serif; }
+        .card input:checked + label .c-price { color: var(--red); }
+        .card input:checked + label .c-name  { color: var(--red2); }
+
+        .badge-4est {
+            display: inline-block;
+            font-size: .56rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+            background: rgba(255,191,0,.12); color: var(--yellow2);
+            border: 1px solid rgba(255,191,0,.3); border-radius: 100px;
+            padding: 2px 7px; margin-top: 3px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        /* ─── 4 ESTACIONES PICKER ─── */
+        .est-picker {
+            background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+            overflow: hidden;
+            max-height: 0; opacity: 0;
+            transition: max-height .42s cubic-bezier(.22,1,.36,1), opacity .28s ease, padding .28s ease, margin .28s ease;
+            padding: 0; margin-bottom: 0;
+        }
+        .est-picker.open {
+            max-height: 360px; opacity: 1;
+            padding: 13px 12px; margin-bottom: 12px;
+        }
+        .est-picker-title {
+            font-size: .66rem; letter-spacing: .15em; text-transform: uppercase;
+            color: var(--textMuted); margin-bottom: 9px; font-weight: 700;
+            display: flex; align-items: center; gap: 7px;
+            font-family: 'Oswald', sans-serif;
+        }
+        .est-counter {
+            background: var(--red); color: #fff; border-radius: 100px;
+            padding: 1px 7px; font-size: .62rem; font-weight: 800;
+            transition: background .2s;
+        }
+        .est-counter.full { background: #1a7a3a; }
+        .est-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+        .est-item input { display: none; }
+        .est-item label {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 11px 6px 8px;
+            border: 1.5px solid var(--border); border-radius: 100px;
+            font-size: .78rem; font-weight: 600; color: var(--textMuted);
+            cursor: pointer; transition: all .16s; user-select: none;
+            background: var(--white); font-family: 'Oswald', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .est-item label svg { width: 12px; height: 12px; flex-shrink: 0; }
+        .est-item label:active { transform: scale(.94); }
+        .est-item input:checked + label {
+            background: var(--yellow); border-color: var(--yellow);
+            color: #111111; font-weight: 800;
+        }
+        .est-item input:disabled + label { opacity: .25; pointer-events: none; }
+
+        /* ─── SIZE ─── */
+        .size-grid { display: flex; gap: 6px; }
+        .size-card { flex: 1; }
+        .size-card input { display: none; }
+        .size-card label {
+            width: 100%; padding: 11px 4px; border-radius: 10px;
+            border: 1.5px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; gap: 2px; transition: all .18s; background: var(--surface);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .size-card .s-letter { font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--text); line-height: 1; }
+        .size-card .s-name   { font-size: .52rem; color: var(--textMuted); text-align: center; font-weight: 500; line-height: 1.2; }
+        .size-card .s-price  { font-size: .68rem; color: var(--textMid); font-weight: 800; font-family: 'Oswald', sans-serif; margin-top: 1px; }
+        .size-card label:active { transform: scale(.95); }
+        .size-card input:checked + label {
+            border-color: var(--red); background: var(--yellowLight);
+            box-shadow: 0 0 0 1.5px var(--red), 0 3px 12px rgba(204,26,26,.14);
+        }
+        .size-card input:checked + label .s-price  { color: var(--red); }
+        .size-card input:checked + label .s-letter { color: var(--red); }
+
+        /* ─── EXTRAS ─── */
+        .extras-wrap { display: flex; flex-wrap: wrap; gap: 7px; }
+        .extra input { display: none; }
+        .extra label {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 12px 8px 9px;
+            border: 1.5px solid var(--border); border-radius: 100px;
+            font-size: .82rem; font-weight: 600; color: var(--textMuted);
+            cursor: pointer; transition: all .16s; user-select: none;
+            background: var(--surface); font-family: 'Oswald', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .extra label svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .extra label:active { transform: scale(.94); }
+        .extra input:checked + label {
+            background: var(--red); border-color: var(--red);
+            color: #fff; font-weight: 700;
+            box-shadow: 0 3px 10px rgba(204,26,26,.35);
+        }
+        .extra input:checked + label svg { filter: brightness(0) invert(1); }
+        .e-price { opacity: .55; font-weight: 500; font-size: .7rem; }
+        .extra input:checked + label .e-price { opacity: .8; }
+
+        /* ─── DELIVERY ─── */
+        .delivery-box {
+            background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+            padding: 14px 13px;
+        }
+        .delivery-box-title {
+            font-size: .66rem; letter-spacing: .15em; text-transform: uppercase;
+            color: var(--textMuted); margin-bottom: 10px; font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+        }
+        .delivery-options { display: flex; gap: 8px; }
+        .dopt { flex: 1; }
+        .dopt input { display: none; }
+        .dopt label {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 10px; border: 1.5px solid var(--border); border-radius: 10px;
+            cursor: pointer; font-size: .86rem; font-weight: 600; color: var(--textMuted);
+            transition: all .18s; background: var(--white); width: 100%;
+            font-family: 'Oswald', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .dopt label svg { width: 17px; height: 17px; flex-shrink: 0; }
+        .dopt label:active { transform: scale(.97); }
+        .dopt input:checked + label {
+            border-color: var(--red); background: var(--yellowLight);
+            color: var(--red); font-weight: 700;
+            box-shadow: 0 0 0 1.5px var(--red);
+        }
+        .dopt-sub { display: block; font-size: .65rem; color: var(--textMuted); font-weight: 400; margin-top: 1px; font-family: 'Inter', sans-serif; }
+        .dopt input:checked + label .dopt-sub { color: rgba(204,26,26,.6); }
+
+        /* ─── LOCATION PANEL ─── */
+        .location-panel {
+            max-height: 0; overflow: hidden; opacity: 0;
+            transition: max-height .4s cubic-bezier(.22,1,.36,1), opacity .3s ease, margin .3s ease;
+            margin-top: 0;
+        }
+        .location-panel.open {
+            max-height: 220px; opacity: 1;
+            margin-top: 10px;
+        }
+        .location-inner {
+            background: var(--white); border: 1.5px solid var(--border); border-radius: 10px;
+            padding: 13px 12px; display: flex; flex-direction: column; gap: 8px;
+        }
+        .loc-hint {
+            font-size: .72rem; color: var(--textMuted); font-family: 'Inter', sans-serif;
+            display: flex; align-items: flex-start; gap: 6px;
+        }
+        .loc-hint svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; color: var(--red); }
+        .field-textarea {
+            background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px;
+            padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: .88rem;
+            color: var(--text); outline: none; resize: none; height: 70px;
+            transition: border-color .18s, box-shadow .18s; width: 100%;
+        }
+        .field-textarea::placeholder { color: var(--textMuted); opacity: .6; }
+        .field-textarea:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(204,26,26,.1);
+        }
+        .loc-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 14px; background: var(--surface); border: 1.5px solid var(--border);
+            border-radius: 8px; cursor: pointer; font-family: 'Oswald', sans-serif;
+            font-size: .82rem; font-weight: 700; color: var(--textMid); letter-spacing: .04em;
+            transition: all .18s; -webkit-tap-highlight-color: transparent;
+            width: 100%; justify-content: center;
+        }
+        .loc-btn svg { width: 15px; height: 15px; color: var(--red); }
+        .loc-btn:active { transform: scale(.97); background: var(--surfaceHover); }
+        .loc-btn.active { background: var(--yellowLight); border-color: var(--red); color: var(--red); }
+
+        /* ─── PAYMENT OPTIONS ─── */
+        .pay-options { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+        .pay-badge {
+            position: absolute; top: 6px; right: 6px;
+            background: var(--red); color: #fff; border-radius: 4px;
+            font-size: .58rem; font-weight: 700; padding: 1px 5px;
+            font-family: 'Oswald', sans-serif; letter-spacing: .04em;
+        }
+        .dopt label { position: relative; }
+
+        /* ─── BREAKDOWN ─── */
+        .breakdown {
+            background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+            padding: 14px 12px;
+        }
+        .bd-title {
+            font-size: .66rem; letter-spacing: .15em; text-transform: uppercase;
+            color: var(--textMuted); margin-bottom: 10px; font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+        }
+        .bd-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,.06);
+            font-size: .83rem; color: var(--textMuted); font-family: 'Inter', sans-serif;
+            animation: fadeRow .2s ease both;
+        }
+        @keyframes fadeRow { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
+        .bd-row strong { font-weight: 700; color: var(--textMid); font-family: 'Oswald', sans-serif; font-size: .88rem; }
+        .bd-row:last-of-type { border-bottom: none; }
+        .bd-total {
+            display: flex; justify-content: space-between; align-items: baseline;
+            padding-top: 10px; margin-top: 4px;
+            border-top: 2px solid rgba(204,26,26,.2);
+            font-size: .72rem; font-weight: 800; color: var(--textMuted);
+            font-family: 'Oswald', sans-serif; letter-spacing: .12em; text-transform: uppercase;
+        }
+        .bd-total strong { font-family: 'Oswald', sans-serif; font-size: 1.45rem; color: var(--red); }
+
+        /* ─── STICKY FOOTER ─── */
+        .footer {
+            background: linear-gradient(to top, var(--white) 75%, rgba(255,255,255,0));
+            padding: 12px 14px 28px;
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 480px; z-index: 70;
+        }
+        .order-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, #25D366 0%, #128C4E 100%);
+            color: #fff; border: none; padding: 15px 20px; border-radius: 12px;
+            font-family: 'Oswald', sans-serif; font-size: 1.05rem; font-weight: 800;
+            letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+            transition: transform .14s, box-shadow .18s;
+            box-shadow: 0 6px 22px rgba(37,211,102,.38);
+            -webkit-tap-highlight-color: transparent;
+            position: relative; overflow: hidden;
+        }
+        .order-btn::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 50%);
+        }
+        .order-btn:active { transform: scale(.97); box-shadow: 0 3px 10px rgba(37,211,102,.25); }
+        .order-btn svg { width: 21px; height: 21px; flex-shrink: 0; }
+        .order-btn::after {
+            content: ''; position: absolute; inset: 0; border-radius: 12px;
+            animation: waPulse 2.6s ease-out infinite;
+        }
+        @keyframes waPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(37,211,102,.5); }
+            70%  { box-shadow: 0 0 0 12px rgba(37,211,102,0); }
+            100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+        }
+
+        /* ─── MODAL bottom sheet ─── */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,.5); backdrop-filter: blur(8px);
+            display: flex; align-items: flex-end; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity .25s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: var(--white); border-radius: 18px 18px 0 0;
+            padding: 10px 18px 32px; width: 100%; max-width: 480px;
+            border: 1.5px solid var(--border); border-bottom: none;
+            box-shadow: 0 -16px 50px rgba(0,0,0,.15);
+            transform: translateY(100%); transition: transform .36s cubic-bezier(.22,1,.36,1);
+        }
+        .modal-overlay.open .modal { transform: translateY(0); }
+        .modal-handle {
+            width: 38px; height: 4px; border-radius: 2px;
+            background: var(--border); margin: 0 auto 16px;
+        }
+        .modal-tag {
+            font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+            color: var(--yellow2); font-weight: 800; margin-bottom: 4px;
+            font-family: 'Oswald', sans-serif;
+        }
+        .modal h2 {
+            font-family: 'Oswald', sans-serif; font-size: 1.45rem;
+            color: var(--text); margin-bottom: 16px; line-height: 1.2;
+        }
+        .m-row {
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px solid var(--border); font-size: .86rem;
+            color: var(--textMuted); font-family: 'Inter', sans-serif;
+        }
+        .m-row:last-of-type { border-bottom: none; }
+        .m-row strong {
+            color: var(--textMid); font-weight: 700; text-align: right; max-width: 62%;
+            font-family: 'Oswald', sans-serif; font-size: .9rem;
+        }
+        .m-total {
+            display: flex; justify-content: space-between; align-items: baseline;
+            margin-top: 12px; padding-top: 12px; border-top: 2px solid var(--red);
+            font-size: .74rem; font-weight: 800; color: var(--textMuted);
+            font-family: 'Oswald', sans-serif; letter-spacing: .1em; text-transform: uppercase;
+        }
+        .m-total strong { font-family: 'Oswald', sans-serif; font-size: 1.65rem; color: var(--red); }
+        .modal-wa-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; margin-top: 14px;
+            background: linear-gradient(135deg, #25D366 0%, #128C4E 100%);
+            color: #fff; border: none; padding: 15px; border-radius: 12px;
+            font-family: 'Oswald', sans-serif; font-size: 1rem;
+            font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+            cursor: pointer; transition: transform .14s; box-shadow: 0 4px 16px rgba(37,211,102,.3);
+            text-decoration: none; -webkit-tap-highlight-color: transparent;
+        }
+        .modal-wa-btn:active { transform: scale(.97); }
+        .modal-wa-btn svg { width: 20px; height: 20px; }
+        .modal-close {
+            display: block; width: 100%; margin-top: 8px;
+            background: transparent; color: var(--textMuted);
+            border: 1.5px solid var(--border); padding: 12px; border-radius: 12px;
+            font-family: 'Oswald', sans-serif; font-size: .82rem;
+            letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+            cursor: pointer; transition: background .18s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .modal-close:active { background: var(--surface); }
+
+        /* ─── Validation error ─── */
+        .field-input.error, .field-textarea.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(204,26,26,.12);
+            animation: shake .3s ease;
+        }
+        @keyframes shake {
+            0%,100%{ transform:translateX(0); }
+            25%    { transform:translateX(-5px); }
+            75%    { transform:translateX(5px); }
+        }
+
+        /* ─── Desktop ─── */
+        @media(min-width: 480px) {
+            body { padding: 24px 16px 60px; }
+            .container { border-radius: 14px; min-height: auto; }
+            .footer { position: static; transform: none; border-radius: 0 0 14px 14px; padding-bottom: 20px; background: var(--white); border-top: 1px solid var(--border); }
+            .body-wrap { padding-bottom: 24px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-wrap">
+                <div class="logo-pizza-icon">🍕</div>
+                <div class="logo-text-block">
+                    <div class="logo-pizzeria">PIZZERÍA</div>
+                    <div class="logo-jyk">JyK</div>
+                </div>
+            </div>
+            <div class="logo-tagline">· Hecho al momento ·</div>
+        </div>
+    </header>
+
+    <!-- PRICE BAR -->
+    <div class="price-bar">
+        <span class="pb-label">Total estimado</span>
+        <div class="pb-right">
+            <span class="pb-currency">$</span>
+            <span id="priceDisplay">0.00</span>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body-wrap">
+
+        <!-- 0. Datos del cliente -->
+        <div class="section">
+            <div class="sec-title"><span class="sec-num">1</span> Tus datos</div>
+            <div class="client-box">
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label" for="clientName">Nombre</label>
+                        <input class="field-input" id="clientName" type="text" placeholder="María" autocomplete="given-name">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="clientLastName">Apellido</label>
+                        <input class="field-input" id="clientLastName" type="text" placeholder="González" autocomplete="family-name">
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label class="field-label" for="clientPhone">Teléfono</label>
+                    <input class="field-input" id="clientPhone" type="tel" placeholder="Ej. 0414-1234567" autocomplete="tel">
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. Especialidad -->
+        <div class="section">
+            <div class="sec-title"><span class="sec-num">2</span> Especialidad</div>
+            <div class="pizza-grid">
+
+                <div class="card">
+                    <input type="radio" name="pizza" id="p1" value="Tradicional" checked onchange="onPizzaChange()">
+                    <label for="p1">
+                        <span class="c-name">Tradicional</span>
+                        <span class="c-desc">Tomate, mozzarella</span>
+                        <span class="c-price" id="lp1">$3.00</span>
+                    </label>
+                </div>
+
+                <div class="card">
+                    <input type="radio" name="pizza" id="p2" value="4 Estaciones" onchange="onPizzaChange()">
+                    <label for="p2">
+                        <span class="c-name">4 Estaciones</span>
+                        <span class="c-desc">Elige 4 ingredientes</span>
+                        <span class="badge-4est">Personalizable</span>
+                        <span class="c-price" id="lp2">$5.00</span>
+                    </label>
+                </div>
+
+                <div class="card">
+                    <input type="radio" name="pizza" id="p3" value="Especial" onchange="onPizzaChange()">
+                    <label for="p3">
+                        <span class="c-name">Especial</span>
+                        <span class="c-desc">Nuestra pizza estrella</span>
+                        <span class="c-price" id="lp3">$6.00</span>
+                    </label>
+                </div>
+
+                <div class="card">
+                    <input type="radio" name="pizza" id="p4" value="Apetitosa" onchange="onPizzaChange()">
+                    <label for="p4">
+                        <span class="c-name">Apetitosa</span>
+                        <span class="c-desc">Sabores que conquistan</span>
+                        <span class="c-price" id="lp4">$4.50</span>
+                    </label>
+                </div>
+
+                <div class="card">
+                    <input type="radio" name="pizza" id="p5" value="Favorita" onchange="onPizzaChange()">
+                    <label for="p5">
+                        <span class="c-name">Favorita</span>
+                        <span class="c-desc">La preferida de nuestros clientes</span>
+                        <span class="c-price" id="lp5">$6.00</span>
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- 4 Estaciones picker -->
+            <div class="est-picker" id="estPicker">
+                <div class="est-picker-title">
+                    Elige exactamente 4 ingredientes
+                    <span class="est-counter" id="estCounter">0 / 4</span>
+                </div>
+                <div class="est-wrap" id="estWrap"></div>
+            </div>
+        </div>
+
+        <!-- 2. Tamaño -->
+        <div class="section">
+            <div class="sec-title"><span class="sec-num">3</span> Tamaño</div>
+            <div class="size-grid">
+                <div class="size-card">
+                    <input type="radio" name="size" id="s1" value="Mini" checked onchange="calcTotal()">
+                    <label for="s1"><span class="s-letter">XS</span><span class="s-name">Mini</span><span class="s-price" id="ls1">$3.00</span></label>
+                </div>
+                <div class="size-card">
+                    <input type="radio" name="size" id="s2" value="Mediana" onchange="calcTotal()">
+                    <label for="s2"><span class="s-letter">M</span><span class="s-name">Med.</span><span class="s-price" id="ls2">$6.00</span></label>
+                </div>
+                <div class="size-card">
+                    <input type="radio" name="size" id="s3" value="Grande" onchange="calcTotal()">
+                    <label for="s3"><span class="s-letter">L</span><span class="s-name">Grande</span><span class="s-price" id="ls3">$8.00</span></label>
+                </div>
+                <div class="size-card">
+                    <input type="radio" name="size" id="s4" value="Tamaño JyK" onchange="calcTotal()">
+                    <label for="s4"><span class="s-letter">JyK</span><span class="s-name">T. JyK</span><span class="s-price" id="ls4">$10.00</span></label>
+                </div>
+                <div class="size-card">
+                    <input type="radio" name="size" id="s5" value="Extra Familiar" onchange="calcTotal()">
+                    <label for="s5"><span class="s-letter">XL</span><span class="s-name">X. Fam.</span><span class="s-price" id="ls5">$14.00</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Adicionales -->
+        <div class="section">
+            <div class="sec-title"><span class="sec-num">4</span> Adicionales</div>
+            <div class="extras-wrap">
+
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e1" value="Aceitunas" onchange="calcTotal()">
+                    <label for="e1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><ellipse cx="12" cy="14" rx="5" ry="6.5"/><path d="M12 7.5C12 5.5 14 4 16 4.5"/><circle cx="12" cy="14" r="1.8" fill="currentColor" stroke="none"/></svg>
+                        Aceitunas <span class="e-price" id="ep1">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e2" value="Borde de Queso" onchange="calcTotal()">
+                    <label for="e2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="3" r="1.3" fill="currentColor" stroke="none"/><circle cx="21" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="21" r="1.3" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
+                        Borde de Queso <span class="e-price" id="ep2">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e3" value="Carne" onchange="calcTotal()">
+                    <label for="e3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12C3 8 7 4 12 4C17 4 21 8 21 12"/><path d="M7 16C7 13.8 9.2 12 12 12C14.8 12 17 13.8 17 16C17 18.2 14.8 20 12 20C9.2 20 7 18.2 7 16Z"/></svg>
+                        Carne <span class="e-price" id="ep3">+$1.00</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e4" value="Champiñón" onchange="calcTotal()">
+                    <label for="e4">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 13C5 8.6 8.1 5 12 5C15.9 5 19 8.6 19 13Z"/><line x1="9" y1="13" x2="9" y2="20"/><line x1="15" y1="13" x2="15" y2="20"/><line x1="9" y1="20" x2="15" y2="20"/></svg>
+                        Champiñón <span class="e-price" id="ep4">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e5" value="Doble Queso" onchange="calcTotal()">
+                    <label for="e5">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2 16L12 4L22 16L22 20L2 20Z"/><circle cx="16" cy="13" r="1.4" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r="1" fill="currentColor" stroke="none"/></svg>
+                        Doble Queso <span class="e-price" id="ep5">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e6" value="Maíz" onchange="calcTotal()">
+                    <label for="e6">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 21C9 21 7 17 7 13C7 8 9 4 12 3C15 4 17 8 17 13C17 17 15 21 12 21Z"/><line x1="9.5" y1="8" x2="14.5" y2="8"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9.5" y1="14" x2="14.5" y2="14"/></svg>
+                        Maíz <span class="e-price" id="ep6">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e7" value="Pepperoni" onchange="calcTotal()">
+                    <label for="e7">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12.5" cy="7.5" r=".9" fill="currentColor" stroke="none"/><circle cx="8" cy="14" r=".9" fill="currentColor" stroke="none"/></svg>
+                        Pepperoni <span class="e-price" id="ep7">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e8" value="Pollo" onchange="calcTotal()">
+                    <label for="e8">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3C9 3 7 5 7 8C7 11 9 13 12 14C15 13 17 11 17 8C17 5 15 3 12 3Z"/><path d="M12 14C8 15 5 17 5 20H19C19 17 16 15 12 14Z"/></svg>
+                        Pollo <span class="e-price" id="ep8">+$1.00</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e9" value="Tocineta" onchange="calcTotal()">
+                    <label for="e9">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 7Q6 5 9 8Q12 11 15 8Q18 5 21 7"/><path d="M3 12Q6 10 9 13Q12 16 15 13Q18 10 21 12"/><path d="M3 17Q6 15 9 18Q12 21 15 18Q18 15 21 17"/></svg>
+                        Tocineta <span class="e-price" id="ep9">+$0.50</span>
+                    </label>
+                </div>
+                <div class="extra">
+                    <input type="checkbox" name="extra" id="e10" value="Vegetales" onchange="calcTotal()">
+                    <label for="e10">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 22C12 22 4 16 4 10C4 6.7 7 4 10 5C10.7 5.2 11.4 5.6 12 6C12.6 5.6 13.3 5.2 14 5C17 4 20 6.7 20 10C20 16 12 22 12 22Z"/></svg>
+                        Vegetales <span class="e-price" id="ep10">+$0.50</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 4. Entrega -->
+        <div class="section">
+            <div class="sec-title"><span class="sec-num">5</span> Entrega</div>
+            <div class="delivery-box">
+                <div class="delivery-box-title">¿Cómo recibirás tu pedido?</div>
+                <div class="delivery-options" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;">
+                    <div class="dopt">
+                        <input type="radio" name="delivery" id="d2" value="sitio" checked onchange="onDeliveryChange()">
+                        <label for="d2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-9 9 9"/><path d="M5 9v10a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1V9"/></svg>
+                            <span>En sitio<span class="dopt-sub">Sin caja</span></span>
+                        </label>
+                    </div>
+                    <div class="dopt">
+                        <input type="radio" name="delivery" id="d0" value="pickup" onchange="onDeliveryChange()">
+                        <label for="d0">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6L18 2z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                            <span>Pickup<span class="dopt-sub">Caja +$1</span></span>
+                        </label>
+                    </div>
+                    <div class="dopt">
+                        <input type="radio" name="delivery" id="d1" value="delivery" onchange="onDeliveryChange()">
+                        <label for="d1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="8" width="14" height="11" rx="1"/><path d="M15 12h3l4 4v3h-7V12z"/><circle cx="5" cy="20.5" r="1.8"/><circle cx="18.5" cy="20.5" r="1.8"/></svg>
+                            <span>Delivery<span class="dopt-sub">Caja +$1</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Location panel (solo con delivery) -->
+                <div class="location-panel" id="locationPanel">
+                    <div class="location-inner">
+                        <p class="loc-hint">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Escribe tu dirección o comparte tu ubicación
+                        </p>
+                        <textarea class="field-textarea" id="locationText" placeholder="Ej. Calle 5, Urb. Las Palmas, Casa #12, cerca del parque..."></textarea>
+                        <button class="loc-btn" id="locGpsBtn" onclick="getGPSLocation()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 3"/></svg>
+                            Usar mi ubicación GPS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Pago -->
+        <div class="section">
+            <div class="sec-title"><span class="sec-num">6</span> Método de Pago</div>
+            <div class="delivery-box">
+                <div class="delivery-box-title">¿Cómo vas a pagar?</div>
+                <div class="pay-options">
+                    <div class="dopt">
+                        <input type="radio" name="pago" id="pg1" value="Efectivo" checked onchange="calcTotal()">
+                        <label for="pg1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
+                            <span>Efectivo<span class="dopt-sub">Sin recargo</span></span>
+                        </label>
+                    </div>
+                    <div class="dopt">
+                        <input type="radio" name="pago" id="pg2" value="PagoMóvil" onchange="calcTotal()">
+                        <label for="pg2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                            <span>PagoMóvil<span class="dopt-sub">Sin recargo</span></span>
+                        </label>
+                    </div>
+                    <div class="dopt">
+                        <input type="radio" name="pago" id="pg3" value="Zelle" onchange="calcTotal()">
+                        <label for="pg3">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            <span>Zelle<span class="dopt-sub">+$1.00</span></span>
+                            <span class="pay-badge">+$1</span>
+                        </label>
+                    </div>
+                    <div class="dopt">
+                        <input type="radio" name="pago" id="pg4" value="Otro" onchange="calcTotal()">
+                        <label for="pg4">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <span>Otro<span class="dopt-sub">Consultar</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desglose -->
+        <div class="breakdown">
+            <div class="bd-title">Desglose</div>
+            <div id="breakdownRows"></div>
+            <div class="bd-total"><span>Total</span><strong id="bdTotal">$0.00</strong></div>
+        </div>
+
+    </div><!-- /body-wrap -->
+
+    <!-- STICKY FOOTER -->
+    <div class="footer">
+        <button class="order-btn" onclick="procesarPedido()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Pedir por WhatsApp
+        </button>
+    </div>
+
+</div><!-- /container -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="cerrarModal(event)">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <div class="modal-tag">Resumen del pedido</div>
+        <h2>¡Tu orden está<br>lista!</h2>
+        <div id="summaryContent"></div>
+        <div class="m-total"><span>Total a pagar</span><strong id="modalTotal">$0.00</strong></div>
+        <a id="waLink" class="modal-wa-btn" href="#" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Enviar pedido
+        </a>
+        <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    const fmt        = v => '$' + v.toFixed(2);
+    const WA_NUMBER  = '584146814858';
+
+    const PIZZA_PRICES = {
+        'Tradicional':  [3, 6, 8, 10, 14],
+        '4 Estaciones': [5, 9, 12, 13, 16],
+        'Especial':     [6, 11, 14, 18, 22],
+        'Apetitosa':    [4.5, 9, 11, 13, 16],
+        'Favorita':     [6, 11, 14, 18, 20],
+    };
+    const EXTRA_PRICES = {
+        'Aceitunas':     [0.5, 1, 1.5, 2, 3],
+        'Borde de Queso':[0.5, 1, 1.5, 2, 3],
+        'Carne':         [1, 2, 2, 3, 4],
+        'Champiñón':     [0.5, 1, 1.5, 2, 3],
+        'Doble Queso':   [0.5, 1, 1.5, 2, 3],
+        'Maíz':          [0.5, 1, 1, 1.5, 2],
+        'Pepperoni':     [0.5, 1, 1.5, 2, 3],
+        'Pollo':         [1, 2, 2, 3, 4],
+        'Tocineta':      [0.5, 1, 1.5, 2, 3],
+        'Vegetales':     [0.5, 1, 1, 1.5, 2],
+    };
+    const SIZE_INDEX = { 'Mini':0, 'Mediana':1, 'Grande':2, 'Tamaño JyK':3, 'Extra Familiar':4 };
+
+    const INGREDIENTS = [
+        { id:'ei1', value:'Pepperoni', svg:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="9.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/>'},
+        { id:'ei2', value:'Maíz',      svg:'<path d="M12 21C9 21 7 17 7 13C7 8 9 4 12 3C15 4 17 8 17 13C17 17 15 21 12 21Z"/><line x1="9.5" y1="8" x2="14.5" y2="8"/><line x1="9" y1="11" x2="15" y2="11"/>'},
+        { id:'ei3', value:'Tocineta',  svg:'<path d="M3 7Q6 5 9 8Q12 11 15 8Q18 5 21 7"/><path d="M3 12Q6 10 9 13Q12 16 15 13Q18 10 21 12"/>'},
+        { id:'ei4', value:'Aceitunas', svg:'<ellipse cx="12" cy="14" rx="5" ry="6.5"/><circle cx="12" cy="14" r="1.8" fill="currentColor" stroke="none"/>'},
+        { id:'ei5', value:'Cebolla',   svg:'<path d="M12 3C8 5 5 9 5 14C5 18 8.1 21 12 21C15.9 21 19 18 19 14C19 9 16 5 12 3Z"/>'},
+        { id:'ei6', value:'Pimentón',  svg:'<path d="M12 3C12 3 14 2.5 14 4.5"/><path d="M14 4.5C17.5 4.5 20 8 20 12C20 17 17 21 12 21C7 21 4 17 4 12C4 8 6.5 4.5 10 4.5Z"/>'},
+        { id:'ei7', value:'Champiñón', svg:'<path d="M5 13C5 8.6 8.1 5 12 5C15.9 5 19 8.6 19 13Z"/><line x1="9" y1="13" x2="9" y2="20"/><line x1="15" y1="13" x2="15" y2="20"/><line x1="9" y1="20" x2="15" y2="20"/>'},
+        { id:'ei8', value:'Jamón',     svg:'<rect x="4" y="8" width="16" height="10" rx="3"/><line x1="8" y1="8" x2="8" y2="18" opacity=".4"/><line x1="12" y1="8" x2="12" y2="18" opacity=".4"/>'},
+        { id:'ei9', value:'Pollo',     svg:'<path d="M12 3C9 3 7 5 7 8C7 11 9 13 12 14C15 13 17 11 17 8C17 5 15 3 12 3Z"/><path d="M12 14C8 15 5 17 5 20H19C19 17 16 15 12 14Z"/>'},
+        { id:'ei10',value:'Carne',     svg:'<path d="M3 12C3 8 7 4 12 4C17 4 21 8 21 12"/><path d="M7 16C7 13.8 9.2 12 12 12C14.8 12 17 13.8 17 16C17 18.2 14.8 20 12 20C9.2 20 7 18.2 7 16Z"/>'},
+    ];
+
+    // Build 4 estaciones picker
+    const estWrap = document.getElementById('estWrap');
+    INGREDIENTS.forEach(ing => {
+        estWrap.innerHTML += `<div class="est-item">
+            <input type="checkbox" name="estIngr" id="${ing.id}" value="${ing.value}" onchange="onEstChange()">
+            <label for="${ing.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">${ing.svg}</svg>
+                ${ing.value}
+            </label>
+        </div>`;
+    });
+
+    // ── Helpers ──
+    const getSelectedPizza = () => document.querySelector('input[name="pizza"]:checked')?.value ?? 'Tradicional';
+    const getSelectedSize  = () => document.querySelector('input[name="size"]:checked')?.value ?? 'Mini';
+    const getSizeIdx       = () => SIZE_INDEX[getSelectedSize()] ?? 0;
+    const getPizzaPrice    = () => PIZZA_PRICES[getSelectedPizza()]?.[getSizeIdx()] ?? 0;
+    const getExtraPrice    = n  => EXTRA_PRICES[n]?.[getSizeIdx()] ?? 0;
+    const getCheckboxes    = n  => [...document.querySelectorAll(`input[name="${n}"]:checked`)].map(el => el.value);
+    const is4Est           = () => getSelectedPizza() === '4 Estaciones';
+    const isDelivery       = () => document.querySelector('input[name="delivery"]:checked')?.value === 'delivery';
+    const isPickup         = () => document.querySelector('input[name="delivery"]:checked')?.value === 'pickup';
+    const needsBox         = () => isDelivery() || isPickup();
+    const isZelle          = () => document.querySelector('input[name="pago"]:checked')?.value === 'Zelle';
+    const getPayment       = () => document.querySelector('input[name="pago"]:checked')?.value ?? 'Efectivo';
+
+    function getDelivery() {
+        const v = document.querySelector('input[name="delivery"]:checked')?.value ?? 'sitio';
+        if (v === 'delivery') return { value:'Delivery', price:1, label:'Delivery · Caja' };
+        if (v === 'pickup')   return { value:'Pickup',   price:1, label:'Pickup · Caja' };
+        return { value:'En sitio', price:0, label:'En sitio' };
+    }
+    function getLocation() {
+        return document.getElementById('locationText').value.trim();
+    }
+    function getClientName() {
+        const n = document.getElementById('clientName').value.trim();
+        const l = document.getElementById('clientLastName').value.trim();
+        return (n + ' ' + l).trim();
+    }
+
+    // ── Label updates ──
+    function updatePizzaLabels() {
+        const idx = getSizeIdx();
+        Object.entries(PIZZA_PRICES).forEach(([, prices], i) => {
+            const s = document.getElementById('lp' + (i+1));
+            if (s) s.textContent = fmt(prices[idx]);
+        });
+    }
+    function updateExtraLabels() {
+        const idx = getSizeIdx();
+        ['Aceitunas','Borde de Queso','Carne','Champiñón','Doble Queso','Maíz','Pepperoni','Pollo','Tocineta','Vegetales']
+            .forEach((name, i) => {
+                const s = document.getElementById('ep' + (i+1));
+                if (s) s.textContent = '+' + fmt(EXTRA_PRICES[name][idx]);
+            });
+    }
+    function updateSizeLabels() {
+        const prices = PIZZA_PRICES[getSelectedPizza()] || PIZZA_PRICES['Tradicional'];
+        ['Mini','Mediana','Grande','Tamaño JyK','Extra Familiar'].forEach((sz, i) => {
+            const s = document.getElementById('ls' + (i+1));
+            if (s) s.textContent = fmt(prices[i]);
+        });
+    }
+
+    // ── Event handlers ──
+    function onPizzaChange() {
+        document.getElementById('estPicker').classList.toggle('open', is4Est());
+        calcTotal();
+    }
+    function onDeliveryChange() {
+        document.getElementById('locationPanel').classList.toggle('open', isDelivery());
+        calcTotal();
+    }
+    function onEstChange() {
+        const count = document.querySelectorAll('input[name="estIngr"]:checked').length;
+        const c = document.getElementById('estCounter');
+        c.textContent = count + ' / 4';
+        c.classList.toggle('full', count >= 4);
+        document.querySelectorAll('input[name="estIngr"]').forEach(el => {
+            el.disabled = !el.checked && count >= 4;
+        });
+        calcTotal();
+    }
+
+    // ── GPS Location ──
+    function getGPSLocation() {
+        const btn = document.getElementById('locGpsBtn');
+        if (!navigator.geolocation) {
+            alert('Tu navegador no soporta geolocalización.');
+            return;
+        }
+        btn.textContent = 'Obteniendo ubicación...';
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                const { latitude: lat, longitude: lng } = pos.coords;
+                const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
+                document.getElementById('locationText').value = mapsLink;
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><polyline points="20 6 9 17 4 12"/></svg> Ubicación obtenida`;
+                btn.classList.add('active');
+            },
+            err => {
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--red)"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Usar mi ubicación GPS`;
+                btn.classList.remove('active');
+                if (err.code === 1) alert('Permiso de ubicación denegado. Escribe tu dirección manualmente.');
+                else alert('No se pudo obtener la ubicación. Escribe tu dirección manualmente.');
+            },
+            { timeout: 10000 }
+        );
+    }
+
+    // ── Animated counter ──
+    let displayedVal = 0, raf = null;
+    function animateTo(target) {
+        if (raf) cancelAnimationFrame(raf);
+        const from = displayedVal, diff = target - from, dur = 350, t0 = performance.now();
+        function step(now) {
+            const p = Math.min((now - t0) / dur, 1);
+            const e = 1 - Math.pow(1 - p, 3);
+            const v = from + diff * e;
+            document.getElementById('priceDisplay').textContent = v.toFixed(2);
+            document.getElementById('bdTotal').textContent = fmt(v);
+            if (p < 1) raf = requestAnimationFrame(step);
+            else displayedVal = target;
+        }
+        requestAnimationFrame(step);
+    }
+
+    // ── Main calc ──
+    function calcTotal() {
+        updatePizzaLabels();
+        updateExtraLabels();
+        updateSizeLabels();
+
+        const pizza    = getSelectedPizza();
+        const size     = getSelectedSize();
+        const extras   = getCheckboxes('extra');
+        const delivery = getDelivery();
+        const rows     = [];
+
+        let lbl = pizza + ' (' + size + ')';
+        if (is4Est()) {
+            const g = getEstIngredients();
+            if (g.length) lbl += ': ' + g.join(', ');
+        }
+        rows.push({ label: lbl, price: getPizzaPrice() });
+        extras.forEach(n => rows.push({ label: n, price: getExtraPrice(n) }));
+        if (needsBox()) rows.push({ label: delivery.label, price: 1 });
+        if (isZelle()) rows.push({ label: 'Recargo Zelle', price: 1 });
+
+        const total = rows.reduce((s, r) => s + r.price, 0);
+        document.getElementById('breakdownRows').innerHTML = rows.length
+            ? rows.map(r => `<div class="bd-row"><span>${r.label}</span><strong>${fmt(r.price)}</strong></div>`).join('')
+            : `<div class="bd-row" style="font-style:italic;font-size:.78rem;color:var(--textMuted);">Selecciona tu pizza para comenzar</div>`;
+
+        const d = document.getElementById('priceDisplay');
+        d.classList.remove('bump'); void d.offsetWidth; d.classList.add('bump');
+        animateTo(total);
+    }
+
+    function getEstIngredients() {
+        return [...document.querySelectorAll('input[name="estIngr"]:checked')].map(el => el.value);
+    }
+
+    // ── Build WhatsApp message ──
+    function buildWAMsg(clientName, phone, pizza, size, extras, delivery, location, pago) {
+        let msg = '🍕 *Pedido Pizzería JyK*\n\n';
+        if (clientName) msg += `👤 *Cliente:* ${clientName}\n`;
+        if (phone) msg += `📞 *Teléfono:* ${phone}\n`;
+        msg += `🍕 *Pizza:* ${pizza} — ${size}\n`;
+        if (is4Est()) {
+            const g = getEstIngredients();
+            if (g.length) msg += `🥄 *Ingredientes:* ${g.join(', ')}\n`;
+        }
+        if (extras.length) msg += `➕ *Adicionales:* ${extras.join(', ')}\n`;
+        msg += `📦 *Entrega:* ${delivery.value}\n`;
+        if (isDelivery() && location) msg += `📍 *Ubicación:* ${location}\n`;
+        msg += `💳 *Pago:* ${pago}${pago === 'Zelle' ? ' (+$1.00 recargo)' : ''}\n`;
+
+        const total = getPizzaPrice()
+            + extras.reduce((s, n) => s + getExtraPrice(n), 0)
+            + (needsBox() ? 1 : 0)
+            + (isZelle() ? 1 : 0);
+        msg += `\n💰 *Total: ${fmt(total)}*`;
+        return msg;
+    }
+
+    // ── Process order ──
+    function procesarPedido() {
+        const nameEl  = document.getElementById('clientName');
+        const lastEl  = document.getElementById('clientLastName');
+        const phoneEl = document.getElementById('clientPhone');
+        const name    = nameEl.value.trim();
+        const last    = lastEl.value.trim();
+        const phone   = phoneEl.value.trim();
+
+        let valid = true;
+        [nameEl, lastEl].forEach(el => el.classList.remove('error'));
+        if (!name) { nameEl.classList.add('error'); valid = false; }
+        if (!last) { lastEl.classList.add('error'); valid = false; }
+
+        const locEl = document.getElementById('locationText');
+        locEl.classList.remove('error');
+        if (isDelivery() && !locEl.value.trim()) {
+            locEl.classList.add('error');
+            valid = false;
+        }
+
+        if (!valid) {
+            const firstError = document.querySelector('.error');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        const clientName = name + ' ' + last;
+        const pizza      = getSelectedPizza();
+        const size       = getSelectedSize();
+        const extras     = getCheckboxes('extra');
+        const delivery   = getDelivery();
+        const location   = locEl.value.trim();
+        const pago       = getPayment();
+        const zelleExtra = isZelle() ? 1 : 0;
+
+        let pizzaVal = pizza + ' — ' + size;
+        if (is4Est()) {
+            const g = getEstIngredients();
+            if (g.length) pizzaVal += ' (' + g.join(', ') + ')';
+        }
+
+        const extrasTotal = extras.reduce((s, n) => s + getExtraPrice(n), 0);
+        const rows = [
+            { label:'Cliente',      value: clientName + (phone ? ' · ' + phone : ''),              price: 0 },
+            { label:'Pizza',        value: pizzaVal,                                                price: getPizzaPrice() },
+            { label:'Adicionales',  value: extras.length ? extras.join(', ') : 'Sin adicionales',  price: extrasTotal },
+            { label:'Entrega',      value: delivery.value,                                          price: needsBox() ? 1 : 0 },
+            { label:'Pago',         value: pago,                                                    price: zelleExtra },
+        ];
+        if (isDelivery() && location) {
+            rows.push({ label:'Ubicación', value: location.length > 45 ? location.slice(0,45)+'…' : location, price: 0 });
+        }
+
+        const total = getPizzaPrice() + extrasTotal + (needsBox() ? 1 : 0) + zelleExtra;
+
+        document.getElementById('summaryContent').innerHTML = rows.map(r =>
+            `<div class="m-row"><span>${r.label}</span><strong>${r.value}${r.price > 0 ? ' · ' + fmt(r.price) : ''}</strong></div>`
+        ).join('');
+        document.getElementById('modalTotal').textContent = fmt(total);
+
+        const waMsg = buildWAMsg(clientName, phone, pizza, size, extras, delivery, location, pago);
+        document.getElementById('waLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`;
+        document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function cerrarModal(e) {
+        if (e.target.id === 'modalOverlay') e.target.classList.remove('open');
+    }
+
+    document.getElementById('clientName').addEventListener('input', function(){ this.classList.remove('error'); });
+    document.getElementById('clientLastName').addEventListener('input', function(){ this.classList.remove('error'); });
+    document.getElementById('locationText').addEventListener('input', function(){ this.classList.remove('error'); });
+
+    calcTotal();
+</script>
+</body>
+</html>
