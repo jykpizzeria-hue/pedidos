@@ -661,6 +661,70 @@
             75%    { transform:translateX(5px); }
         }
 
+        /* ─── BANNER HORARIO ─── */
+        .horario-banner {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 16px;
+            font-family: 'Oswald', sans-serif; font-size: .82rem; font-weight: 700;
+            letter-spacing: .08em; text-transform: uppercase;
+        }
+        .horario-banner.abierto { background: #1a8a3c; color: #fff; }
+        .horario-banner.cerrado { background: #111; color: #fff; }
+        .horario-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .abierto .horario-dot { background: #6effa0; animation: dotPulse 1.8s ease-in-out infinite; }
+        .cerrado .horario-dot { background: #888; }
+        @keyframes dotPulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(110,255,160,.5); }
+            50%      { box-shadow: 0 0 0 5px rgba(110,255,160,0); }
+        }
+        .horario-texto { flex: 1; }
+        .horario-hora { font-weight: 400; font-size: .72rem; opacity: .75; margin-left: 4px; }
+
+        /* ─── CANTIDAD + NOTAS ─── */
+        .qty-notes-row {
+            display: flex; gap: 10px; align-items: flex-start; margin-top: 10px;
+        }
+        .qty-box { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+        .qty-label {
+            font-size: .67rem; letter-spacing: .14em; text-transform: uppercase;
+            color: var(--textMuted); font-weight: 700; font-family: 'Oswald', sans-serif;
+        }
+        .qty-ctrl {
+            display: flex; align-items: center;
+            border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
+            background: var(--white);
+        }
+        .qty-btn {
+            background: var(--surface); border: none; cursor: pointer;
+            width: 38px; height: 42px; font-size: 1.2rem; font-weight: 700;
+            color: var(--text); display: grid; place-items: center;
+            transition: background .15s; -webkit-tap-highlight-color: transparent;
+            font-family: 'Oswald', sans-serif;
+        }
+        .qty-btn:active { background: var(--border); }
+        .qty-val {
+            width: 36px; text-align: center; font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem; font-weight: 700; color: var(--red);
+            border: none; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
+            background: var(--white); outline: none; height: 42px;
+            -moz-appearance: textfield;
+        }
+        .qty-val::-webkit-inner-spin-button, .qty-val::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .notes-box { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .notes-input {
+            background: var(--white); border: 1.5px solid var(--border); border-radius: 8px;
+            padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: .85rem;
+            color: var(--text); outline: none; resize: none; height: 66px;
+            transition: border-color .18s, box-shadow .18s; width: 100%;
+        }
+        .notes-input::placeholder { color: var(--textMuted); opacity: .55; }
+        .notes-input:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(204,26,26,.1);
+        }
+
         /* ─── Desktop ─── */
         @media(min-width: 480px) {
             body { padding: 24px 16px 60px; }
@@ -694,6 +758,13 @@
             <span class="pb-currency">$</span>
             <span id="priceDisplay">0.00</span>
         </div>
+    </div>
+
+    <!-- BANNER HORARIO -->
+    <div class="horario-banner" id="horarioBanner">
+        <div class="horario-dot"></div>
+        <span class="horario-texto" id="horarioTexto">Cargando…</span>
+        <span class="horario-hora" id="horarioHora"></span>
     </div>
 
     <!-- BODY -->
@@ -981,6 +1052,22 @@
             <div class="bd-total"><span>Subtotal</span><strong id="bdTotal">$0.00</strong></div>
         </div>
 
+        <!-- Cantidad + Notas -->
+        <div class="qty-notes-row">
+            <div class="qty-box">
+                <span class="qty-label">Cantidad</span>
+                <div class="qty-ctrl">
+                    <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                    <input class="qty-val" id="qtyVal" type="number" value="1" min="1" max="10" readonly>
+                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+            <div class="notes-box">
+                <span class="qty-label">Notas (opcional)</span>
+                <textarea class="notes-input" id="pizzaNotes" placeholder="Ej: sin cebolla, bien cocida, extra salsa…"></textarea>
+            </div>
+        </div>
+
         <!-- Botón Agregar al carrito -->
         <button class="add-btn" id="addBtn" onclick="agregarAlCarrito()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
@@ -1217,29 +1304,39 @@
         animateTo(sub);
     }
 
+    // ── Cantidad ──
+    function changeQty(delta) {
+        const el = document.getElementById('qtyVal');
+        const v = Math.max(1, Math.min(10, parseInt(el.value || 1) + delta));
+        el.value = v;
+        calcTotal();
+    }
+    function getQty() { return Math.max(1, parseInt(document.getElementById('qtyVal').value || 1)); }
+
     // ── Agregar pizza al carrito ──
     function agregarAlCarrito() {
-        const pizza  = getSelectedPizza();
-        const size   = getSelectedSize();
+        const pizza   = getSelectedPizza();
+        const size    = getSelectedSize();
         const sizeIdx = getSizeIdx();
-        const extras = getCheckboxes('extra');
-        const ingr   = is4Est() ? getEstIngredients() : [];
+        const extras  = getCheckboxes('extra');
+        const ingr    = is4Est() ? getEstIngredients() : [];
+        const qty     = getQty();
+        const notes   = document.getElementById('pizzaNotes').value.trim();
 
         if (is4Est() && ingr.length === 0) {
             alert('Elige al menos 1 ingrediente para la 4 Estaciones.');
             return;
         }
 
-        const pizzaP  = PIZZA_PRICES[pizza][sizeIdx];
-        const extrasP = extras.reduce((s, n) => s + (EXTRA_PRICES[n]?.[sizeIdx] ?? 0), 0);
-        const subtotal = pizzaP + extrasP;
+        const pizzaP   = PIZZA_PRICES[pizza][sizeIdx];
+        const extrasP  = extras.reduce((s, n) => s + (EXTRA_PRICES[n]?.[sizeIdx] ?? 0), 0);
+        const unitPrice = pizzaP + extrasP;
+        const subtotal  = unitPrice * qty;
 
-        const item = { id: Date.now(), pizza, size, sizeIdx, extras, ingr, subtotal };
-        carrito.push(item);
+        carrito.push({ id: Date.now(), pizza, size, sizeIdx, extras, ingr, qty, notes, unitPrice, subtotal });
         renderCarrito();
         resetSeleccion();
 
-        // Pop animation on add btn
         const btn = document.getElementById('addBtn');
         btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
     }
@@ -1254,6 +1351,8 @@
         document.getElementById('estCounter').classList.remove('full');
         document.querySelectorAll('input[name="estIngr"]').forEach(el => el.disabled = false);
         document.getElementById('estPicker').classList.remove('open');
+        document.getElementById('qtyVal').value = 1;
+        document.getElementById('pizzaNotes').value = '';
         calcTotal();
     }
 
@@ -1280,12 +1379,14 @@
 
         itemsEl.innerHTML = carrito.map((item, idx) => {
             let detail = item.size;
-            if (item.ingr.length) detail += ' · ' + item.ingr.join(', ');
+            if (item.ingr.length)   detail += ' · ' + item.ingr.join(', ');
             if (item.extras.length) detail += ' · +' + item.extras.join(', +');
+            if (item.notes)         detail += ` · 📝 ${item.notes}`;
+            const qtyBadge = item.qty > 1 ? `<span style="background:var(--yellow);color:#111;border-radius:4px;padding:0 5px;font-size:.7rem;font-weight:700;margin-left:5px;">x${item.qty}</span>` : '';
             return `<div class="cart-item">
                 <div class="cart-item-icon">🍕</div>
                 <div class="cart-item-info">
-                    <div class="cart-item-name">${item.pizza}</div>
+                    <div class="cart-item-name">${item.pizza}${qtyBadge}</div>
                     <div class="cart-item-detail">${detail}</div>
                 </div>
                 <div class="cart-item-price">${fmt(item.subtotal)}</div>
@@ -1322,9 +1423,11 @@
         msg += '\n';
 
         carrito.forEach((item, i) => {
-            msg += `*Pizza ${i+1}: ${item.pizza} — ${item.size}*\n`;
+            const qtyStr = item.qty > 1 ? ` x${item.qty}` : '';
+            msg += `*Pizza ${i+1}: ${item.pizza}${qtyStr} — ${item.size}*\n`;
             if (item.ingr.length)   msg += `  Ingredientes: ${item.ingr.join(', ')}\n`;
             if (item.extras.length) msg += `  Adicionales: ${item.extras.join(', ')}\n`;
+            if (item.notes)         msg += `  📝 Nota: ${item.notes}\n`;
             msg += `  Subtotal: ${fmt(item.subtotal)}\n\n`;
         });
 
@@ -1377,10 +1480,12 @@
         // Build modal summary
         let html = `<div class="m-row"><span>Cliente</span><strong>${clientName}${phone ? ' · ' + phone : ''}</strong></div>`;
         carrito.forEach((item, i) => {
+            const qtyStr = item.qty > 1 ? ` x${item.qty}` : '';
             let detail = item.size;
             if (item.ingr.length)   detail += ', ' + item.ingr.join(', ');
             if (item.extras.length) detail += ' +' + item.extras.join(', +');
-            html += `<div class="m-row"><span>Pizza ${i+1}</span><strong>${item.pizza} · ${detail} · ${fmt(item.subtotal)}</strong></div>`;
+            if (item.notes)         detail += ` · "${item.notes}"`;
+            html += `<div class="m-row"><span>Pizza ${i+1}${qtyStr}</span><strong>${item.pizza} · ${detail} · ${fmt(item.subtotal)}</strong></div>`;
         });
         html += `<div class="m-row"><span>Entrega</span><strong>${delivery.value}${boxPrice ? ' · $1.00' : ''}</strong></div>`;
         if (isDelivery() && location) html += `<div class="m-row"><span>Ubicación</span><strong>${location.slice(0,45)}${location.length>45?'…':''}</strong></div>`;
@@ -1402,303 +1507,67 @@
     document.getElementById('clientLastName').addEventListener('input', function(){ this.classList.remove('error'); });
     document.getElementById('locationText').addEventListener('input', function(){ this.classList.remove('error'); });
 
-    calcTotal();
-</script>
 
-    const PIZZA_PRICES = {
-        'Tradicional':  [3, 6, 8, 10, 14],
-        '4 Estaciones': [5, 9, 12, 13, 16],
-        'Especial':     [6, 11, 14, 18, 22],
-        'Apetitosa':    [4.5, 9, 11, 13, 16],
-        'Favorita':     [6, 11, 14, 18, 20],
+    // ── Horario (edita aquí los turnos de apertura) ──
+    // Formato: [horaAbre, horaCierra] en decimal. null = cerrado ese día.
+    const HORARIO = {
+        0: [17.5, 25.5],   // Domingo  5:30pm – 1:30am (lunes)
+        1: [17.5, 24.5],   // Lunes    5:30pm – 12:30am
+        2: [17.5, 24.5],   // Martes
+        3: [17.5, 24.5],   // Miércoles
+        4: [17.5, 24.5],   // Jueves
+        5: [17.5, 25.5],   // Viernes  5:30pm – 1:30am
+        6: [17.5, 25.5],   // Sábado   5:30pm – 1:30am
     };
-    const EXTRA_PRICES = {
-        'Aceitunas':     [0.5, 1, 1.5, 2, 3],
-        'Borde de Queso':[0.5, 1, 1.5, 2, 3],
-        'Carne':         [1, 2, 2, 3, 4],
-        'Champiñón':     [0.5, 1, 1.5, 2, 3],
-        'Doble Queso':   [0.5, 1, 1.5, 2, 3],
-        'Maíz':          [0.5, 1, 1, 1.5, 2],
-        'Pepperoni':     [0.5, 1, 1.5, 2, 3],
-        'Pollo':         [1, 2, 2, 3, 4],
-        'Tocineta':      [0.5, 1, 1.5, 2, 3],
-        'Vegetales':     [0.5, 1, 1, 1.5, 2],
-    };
-    const SIZE_INDEX = { 'Mini':0, 'Mediana':1, 'Grande':2, 'Tamaño JyK':3, 'Extra Familiar':4 };
+    const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
-    const INGREDIENTS = [
-        { id:'ei1', value:'Pepperoni', svg:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="9.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/>'},
-        { id:'ei2', value:'Maíz',      svg:'<path d="M12 21C9 21 7 17 7 13C7 8 9 4 12 3C15 4 17 8 17 13C17 17 15 21 12 21Z"/><line x1="9.5" y1="8" x2="14.5" y2="8"/><line x1="9" y1="11" x2="15" y2="11"/>'},
-        { id:'ei3', value:'Tocineta',  svg:'<path d="M3 7Q6 5 9 8Q12 11 15 8Q18 5 21 7"/><path d="M3 12Q6 10 9 13Q12 16 15 13Q18 10 21 12"/>'},
-        { id:'ei4', value:'Aceitunas', svg:'<ellipse cx="12" cy="14" rx="5" ry="6.5"/><circle cx="12" cy="14" r="1.8" fill="currentColor" stroke="none"/>'},
-        { id:'ei5', value:'Cebolla',   svg:'<path d="M12 3C8 5 5 9 5 14C5 18 8.1 21 12 21C15.9 21 19 18 19 14C19 9 16 5 12 3Z"/>'},
-        { id:'ei6', value:'Pimentón',  svg:'<path d="M12 3C12 3 14 2.5 14 4.5"/><path d="M14 4.5C17.5 4.5 20 8 20 12C20 17 17 21 12 21C7 21 4 17 4 12C4 8 6.5 4.5 10 4.5Z"/>'},
-        { id:'ei7', value:'Champiñón', svg:'<path d="M5 13C5 8.6 8.1 5 12 5C15.9 5 19 8.6 19 13Z"/><line x1="9" y1="13" x2="9" y2="20"/><line x1="15" y1="13" x2="15" y2="20"/><line x1="9" y1="20" x2="15" y2="20"/>'},
-        { id:'ei8', value:'Jamón',     svg:'<rect x="4" y="8" width="16" height="10" rx="3"/><line x1="8" y1="8" x2="8" y2="18" opacity=".4"/><line x1="12" y1="8" x2="12" y2="18" opacity=".4"/>'},
-        { id:'ei9', value:'Pollo',     svg:'<path d="M12 3C9 3 7 5 7 8C7 11 9 13 12 14C15 13 17 11 17 8C17 5 15 3 12 3Z"/><path d="M12 14C8 15 5 17 5 20H19C19 17 16 15 12 14Z"/>'},
-        { id:'ei10',value:'Carne',     svg:'<path d="M3 12C3 8 7 4 12 4C17 4 21 8 21 12"/><path d="M7 16C7 13.8 9.2 12 12 12C14.8 12 17 13.8 17 16C17 18.2 14.8 20 12 20C9.2 20 7 18.2 7 16Z"/>'},
-    ];
-
-    // Build 4 estaciones picker
-    const estWrap = document.getElementById('estWrap');
-    INGREDIENTS.forEach(ing => {
-        estWrap.innerHTML += `<div class="est-item">
-            <input type="checkbox" name="estIngr" id="${ing.id}" value="${ing.value}" onchange="onEstChange()">
-            <label for="${ing.id}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">${ing.svg}</svg>
-                ${ing.value}
-            </label>
-        </div>`;
-    });
-
-    // ── Helpers ──
-    const getSelectedPizza = () => document.querySelector('input[name="pizza"]:checked')?.value ?? 'Tradicional';
-    const getSelectedSize  = () => document.querySelector('input[name="size"]:checked')?.value ?? 'Mini';
-    const getSizeIdx       = () => SIZE_INDEX[getSelectedSize()] ?? 0;
-    const getPizzaPrice    = () => PIZZA_PRICES[getSelectedPizza()]?.[getSizeIdx()] ?? 0;
-    const getExtraPrice    = n  => EXTRA_PRICES[n]?.[getSizeIdx()] ?? 0;
-    const getCheckboxes    = n  => [...document.querySelectorAll(`input[name="${n}"]:checked`)].map(el => el.value);
-    const is4Est           = () => getSelectedPizza() === '4 Estaciones';
-    const isDelivery       = () => document.querySelector('input[name="delivery"]:checked')?.value === 'delivery';
-    const isPickup         = () => document.querySelector('input[name="delivery"]:checked')?.value === 'pickup';
-    const needsBox         = () => isDelivery() || isPickup();
-    const isZelle          = () => document.querySelector('input[name="pago"]:checked')?.value === 'Zelle';
-    const getPayment       = () => document.querySelector('input[name="pago"]:checked')?.value ?? 'Efectivo';
-
-    function getDelivery() {
-        const v = document.querySelector('input[name="delivery"]:checked')?.value ?? 'sitio';
-        if (v === 'delivery') return { value:'Delivery', price:1, label:'Delivery · Caja' };
-        if (v === 'pickup')   return { value:'Pickup',   price:1, label:'Pickup · Caja' };
-        return { value:'En sitio', price:0, label:'En sitio' };
-    }
-    function getLocation() {
-        return document.getElementById('locationText').value.trim();
-    }
-    function getClientName() {
-        const n = document.getElementById('clientName').value.trim();
-        const l = document.getElementById('clientLastName').value.trim();
-        return (n + ' ' + l).trim();
+    function fmtH12(decimal) {
+        // Convierte hora decimal (puede ser >24 para madrugada del día siguiente)
+        const h24 = decimal % 24;
+        const hh  = Math.floor(h24);
+        const mm  = h24 % 1 === 0 ? '00' : '30';
+        const period = hh >= 12 ? 'pm' : 'am';
+        const h12 = hh % 12 === 0 ? 12 : hh % 12;
+        return `${h12}:${mm} ${period}`;
     }
 
-    // ── Label updates ──
-    function updatePizzaLabels() {
-        const idx = getSizeIdx();
-        Object.entries(PIZZA_PRICES).forEach(([, prices], i) => {
-            const s = document.getElementById('lp' + (i+1));
-            if (s) s.textContent = fmt(prices[idx]);
-        });
-    }
-    function updateExtraLabels() {
-        const idx = getSizeIdx();
-        ['Aceitunas','Borde de Queso','Carne','Champiñón','Doble Queso','Maíz','Pepperoni','Pollo','Tocineta','Vegetales']
-            .forEach((name, i) => {
-                const s = document.getElementById('ep' + (i+1));
-                if (s) s.textContent = '+' + fmt(EXTRA_PRICES[name][idx]);
-            });
-    }
-    function updateSizeLabels() {
-        const prices = PIZZA_PRICES[getSelectedPizza()] || PIZZA_PRICES['Tradicional'];
-        ['Mini','Mediana','Grande','Tamaño JyK','Extra Familiar'].forEach((sz, i) => {
-            const s = document.getElementById('ls' + (i+1));
-            if (s) s.textContent = fmt(prices[i]);
-        });
-    }
+    function actualizarHorario() {
+        const now    = new Date();
+        const dia    = now.getDay();
+        // hora actual en decimal, considerando madrugada como extensión del día anterior
+        let horaActual = now.getHours() + now.getMinutes() / 60;
+        // Si es madrugada (0–4am), tratarlo como hora >24 del día anterior
+        const diaConsulta = horaActual < 4 ? (dia === 0 ? 6 : dia - 1) : dia;
+        if (horaActual < 4) horaActual += 24;
 
-    // ── Event handlers ──
-    function onPizzaChange() {
-        document.getElementById('estPicker').classList.toggle('open', is4Est());
-        calcTotal();
-    }
-    function onDeliveryChange() {
-        document.getElementById('locationPanel').classList.toggle('open', isDelivery());
-        calcTotal();
-    }
-    function onEstChange() {
-        const count = document.querySelectorAll('input[name="estIngr"]:checked').length;
-        const c = document.getElementById('estCounter');
-        c.textContent = count + ' / 4';
-        c.classList.toggle('full', count >= 4);
-        document.querySelectorAll('input[name="estIngr"]').forEach(el => {
-            el.disabled = !el.checked && count >= 4;
-        });
-        calcTotal();
-    }
+        const turno  = HORARIO[diaConsulta];
+        const banner = document.getElementById('horarioBanner');
+        const texto  = document.getElementById('horarioTexto');
+        const horaEl = document.getElementById('horarioHora');
 
-    // ── GPS Location ──
-    function getGPSLocation() {
-        const btn = document.getElementById('locGpsBtn');
-        if (!navigator.geolocation) {
-            alert('Tu navegador no soporta geolocalización.');
-            return;
+        if (!turno) {
+            banner.className = 'horario-banner cerrado';
+            texto.textContent = '🔒 Cerrado hoy · ' + DIAS[dia];
+            horaEl.textContent = '';
+        } else {
+            const [abre, cierra] = turno;
+            if (horaActual >= abre && horaActual < cierra) {
+                banner.className = 'horario-banner abierto';
+                texto.textContent = '✅ ¡Estamos abiertos!';
+                horaEl.textContent = `Hasta las ${fmtH12(cierra)}`;
+            } else if (horaActual < abre) {
+                banner.className = 'horario-banner cerrado';
+                texto.textContent = '🕐 Aún no abrimos';
+                horaEl.textContent = `Abrimos a las ${fmtH12(abre)}`;
+            } else {
+                banner.className = 'horario-banner cerrado';
+                texto.textContent = '🔒 Ya cerramos por hoy';
+                horaEl.textContent = `Volvemos a las ${fmtH12(abre)}`;
+            }
         }
-        btn.textContent = 'Obteniendo ubicación...';
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                const { latitude: lat, longitude: lng } = pos.coords;
-                const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
-                document.getElementById('locationText').value = mapsLink;
-                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><polyline points="20 6 9 17 4 12"/></svg> Ubicación obtenida`;
-                btn.classList.add('active');
-            },
-            err => {
-                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--red)"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Usar mi ubicación GPS`;
-                btn.classList.remove('active');
-                if (err.code === 1) alert('Permiso de ubicación denegado. Escribe tu dirección manualmente.');
-                else alert('No se pudo obtener la ubicación. Escribe tu dirección manualmente.');
-            },
-            { timeout: 10000 }
-        );
     }
-
-    // ── Animated counter ──
-    let displayedVal = 0, raf = null;
-    function animateTo(target) {
-        if (raf) cancelAnimationFrame(raf);
-        const from = displayedVal, diff = target - from, dur = 350, t0 = performance.now();
-        function step(now) {
-            const p = Math.min((now - t0) / dur, 1);
-            const e = 1 - Math.pow(1 - p, 3);
-            const v = from + diff * e;
-            document.getElementById('priceDisplay').textContent = v.toFixed(2);
-            document.getElementById('bdTotal').textContent = fmt(v);
-            if (p < 1) raf = requestAnimationFrame(step);
-            else displayedVal = target;
-        }
-        requestAnimationFrame(step);
-    }
-
-    // ── Main calc ──
-    function calcTotal() {
-        updatePizzaLabels();
-        updateExtraLabels();
-        updateSizeLabels();
-
-        const pizza    = getSelectedPizza();
-        const size     = getSelectedSize();
-        const extras   = getCheckboxes('extra');
-        const delivery = getDelivery();
-        const rows     = [];
-
-        let lbl = pizza + ' (' + size + ')';
-        if (is4Est()) {
-            const g = getEstIngredients();
-            if (g.length) lbl += ': ' + g.join(', ');
-        }
-        rows.push({ label: lbl, price: getPizzaPrice() });
-        extras.forEach(n => rows.push({ label: n, price: getExtraPrice(n) }));
-        if (needsBox()) rows.push({ label: delivery.label, price: 1 });
-        if (isZelle()) rows.push({ label: 'Recargo Zelle', price: 1 });
-
-        const total = rows.reduce((s, r) => s + r.price, 0);
-        document.getElementById('breakdownRows').innerHTML = rows.length
-            ? rows.map(r => `<div class="bd-row"><span>${r.label}</span><strong>${fmt(r.price)}</strong></div>`).join('')
-            : `<div class="bd-row" style="font-style:italic;font-size:.78rem;color:var(--textMuted);">Selecciona tu pizza para comenzar</div>`;
-
-        const d = document.getElementById('priceDisplay');
-        d.classList.remove('bump'); void d.offsetWidth; d.classList.add('bump');
-        animateTo(total);
-    }
-
-    function getEstIngredients() {
-        return [...document.querySelectorAll('input[name="estIngr"]:checked')].map(el => el.value);
-    }
-
-    // ── Build WhatsApp message ──
-    function buildWAMsg(clientName, phone, pizza, size, extras, delivery, location, pago) {
-        let msg = '🍕 *Pedido Pizzería JyK*\n\n';
-        if (clientName) msg += `👤 *Cliente:* ${clientName}\n`;
-        if (phone) msg += `📞 *Teléfono:* ${phone}\n`;
-        msg += `🍕 *Pizza:* ${pizza} — ${size}\n`;
-        if (is4Est()) {
-            const g = getEstIngredients();
-            if (g.length) msg += `🥄 *Ingredientes:* ${g.join(', ')}\n`;
-        }
-        if (extras.length) msg += `➕ *Adicionales:* ${extras.join(', ')}\n`;
-        msg += `📦 *Entrega:* ${delivery.value}\n`;
-        if (isDelivery() && location) msg += `📍 *Ubicación:* ${location}\n`;
-        msg += `💳 *Pago:* ${pago}${pago === 'Zelle' ? ' (+$1.00 recargo)' : ''}\n`;
-
-        const total = getPizzaPrice()
-            + extras.reduce((s, n) => s + getExtraPrice(n), 0)
-            + (needsBox() ? 1 : 0)
-            + (isZelle() ? 1 : 0);
-        msg += `\n💰 *Total: ${fmt(total)}*`;
-        return msg;
-    }
-
-    // ── Process order ──
-    function procesarPedido() {
-        const nameEl  = document.getElementById('clientName');
-        const lastEl  = document.getElementById('clientLastName');
-        const phoneEl = document.getElementById('clientPhone');
-        const name    = nameEl.value.trim();
-        const last    = lastEl.value.trim();
-        const phone   = phoneEl.value.trim();
-
-        let valid = true;
-        [nameEl, lastEl].forEach(el => el.classList.remove('error'));
-        if (!name) { nameEl.classList.add('error'); valid = false; }
-        if (!last) { lastEl.classList.add('error'); valid = false; }
-
-        const locEl = document.getElementById('locationText');
-        locEl.classList.remove('error');
-        if (isDelivery() && !locEl.value.trim()) {
-            locEl.classList.add('error');
-            valid = false;
-        }
-
-        if (!valid) {
-            const firstError = document.querySelector('.error');
-            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return;
-        }
-
-        const clientName = name + ' ' + last;
-        const pizza      = getSelectedPizza();
-        const size       = getSelectedSize();
-        const extras     = getCheckboxes('extra');
-        const delivery   = getDelivery();
-        const location   = locEl.value.trim();
-        const pago       = getPayment();
-        const zelleExtra = isZelle() ? 1 : 0;
-
-        let pizzaVal = pizza + ' — ' + size;
-        if (is4Est()) {
-            const g = getEstIngredients();
-            if (g.length) pizzaVal += ' (' + g.join(', ') + ')';
-        }
-
-        const extrasTotal = extras.reduce((s, n) => s + getExtraPrice(n), 0);
-        const rows = [
-            { label:'Cliente',      value: clientName + (phone ? ' · ' + phone : ''),              price: 0 },
-            { label:'Pizza',        value: pizzaVal,                                                price: getPizzaPrice() },
-            { label:'Adicionales',  value: extras.length ? extras.join(', ') : 'Sin adicionales',  price: extrasTotal },
-            { label:'Entrega',      value: delivery.value,                                          price: needsBox() ? 1 : 0 },
-            { label:'Pago',         value: pago,                                                    price: zelleExtra },
-        ];
-        if (isDelivery() && location) {
-            rows.push({ label:'Ubicación', value: location.length > 45 ? location.slice(0,45)+'…' : location, price: 0 });
-        }
-
-        const total = getPizzaPrice() + extrasTotal + (needsBox() ? 1 : 0) + zelleExtra;
-
-        document.getElementById('summaryContent').innerHTML = rows.map(r =>
-            `<div class="m-row"><span>${r.label}</span><strong>${r.value}${r.price > 0 ? ' · ' + fmt(r.price) : ''}</strong></div>`
-        ).join('');
-        document.getElementById('modalTotal').textContent = fmt(total);
-
-        const waMsg = buildWAMsg(clientName, phone, pizza, size, extras, delivery, location, pago);
-        document.getElementById('waLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`;
-        document.getElementById('modalOverlay').classList.add('open');
-    }
-
-    function cerrarModal(e) {
-        if (e.target.id === 'modalOverlay') e.target.classList.remove('open');
-    }
-
-    document.getElementById('clientName').addEventListener('input', function(){ this.classList.remove('error'); });
-    document.getElementById('clientLastName').addEventListener('input', function(){ this.classList.remove('error'); });
-    document.getElementById('locationText').addEventListener('input', function(){ this.classList.remove('error'); });
+    actualizarHorario();
+    setInterval(actualizarHorario, 60000);
 
     calcTotal();
 </script>
