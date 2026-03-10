@@ -455,6 +455,95 @@
         }
         .bd-total strong { font-family: 'Oswald', sans-serif; font-size: 1.45rem; color: var(--red); }
 
+        /* ─── CARRITO ─── */
+        .cart-section {
+            margin-top: 12px;
+            background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+            overflow: hidden;
+        }
+        .cart-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 13px;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-title {
+            font-family: 'Oswald', sans-serif; font-size: .72rem; font-weight: 700;
+            letter-spacing: .15em; text-transform: uppercase; color: var(--textMuted);
+            display: flex; align-items: center; gap: 7px;
+        }
+        .cart-count {
+            background: var(--red); color: #fff; border-radius: 100px;
+            padding: 1px 8px; font-size: .65rem; font-weight: 700;
+            font-family: 'Oswald', sans-serif;
+        }
+        .cart-empty {
+            padding: 16px 13px; font-size: .82rem; color: var(--textMuted);
+            font-style: italic; font-family: 'Inter', sans-serif; text-align: center;
+        }
+        .cart-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 13px; border-bottom: 1px solid var(--border);
+            animation: fadeRow .22s ease both;
+        }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item-icon {
+            font-size: 1.3rem; flex-shrink: 0; line-height: 1;
+        }
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-name {
+            font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .9rem;
+            color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .cart-item-detail {
+            font-size: .72rem; color: var(--textMuted); font-family: 'Inter', sans-serif;
+            margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .cart-item-price {
+            font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .95rem;
+            color: var(--red); flex-shrink: 0;
+        }
+        .cart-item-del {
+            background: none; border: none; cursor: pointer; padding: 4px;
+            color: var(--textMuted); flex-shrink: 0; line-height: 1;
+            transition: color .15s; -webkit-tap-highlight-color: transparent;
+        }
+        .cart-item-del:active { color: var(--red); }
+        .cart-item-del svg { width: 15px; height: 15px; display: block; }
+        .cart-total-row {
+            display: flex; justify-content: space-between; align-items: baseline;
+            padding: 10px 13px;
+            border-top: 2px solid rgba(204,26,26,.2);
+            font-family: 'Oswald', sans-serif; font-size: .72rem; font-weight: 700;
+            letter-spacing: .12em; text-transform: uppercase; color: var(--textMuted);
+        }
+        .cart-total-row strong { font-size: 1.3rem; color: var(--red); }
+
+        /* ─── ADD TO CART BTN (inside body) ─── */
+        .add-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; margin-top: 12px;
+            background: var(--red); color: #fff;
+            border: none; padding: 14px; border-radius: 10px;
+            font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+            transition: transform .14s, background .18s;
+            -webkit-tap-highlight-color: transparent;
+            position: relative; overflow: hidden;
+        }
+        .add-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 50%);
+        }
+        .add-btn:active { transform: scale(.97); background: var(--red2); }
+        .add-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .add-btn.pop { animation: addPop .35s ease; }
+        @keyframes addPop {
+            0%  { transform: scale(1); }
+            40% { transform: scale(.95); }
+            70% { transform: scale(1.03); }
+            100%{ transform: scale(1); }
+        }
+
         /* ─── STICKY FOOTER ─── */
         .footer {
             background: linear-gradient(to top, var(--white) 75%, rgba(255,255,255,0));
@@ -885,21 +974,47 @@
             </div>
         </div>
 
-        <!-- Desglose -->
+        <!-- Desglose pizza actual -->
         <div class="breakdown">
-            <div class="bd-title">Desglose</div>
+            <div class="bd-title">Pizza actual</div>
             <div id="breakdownRows"></div>
-            <div class="bd-total"><span>Total</span><strong id="bdTotal">$0.00</strong></div>
+            <div class="bd-total"><span>Subtotal</span><strong id="bdTotal">$0.00</strong></div>
+        </div>
+
+        <!-- Botón Agregar al carrito -->
+        <button class="add-btn" id="addBtn" onclick="agregarAlCarrito()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+            Agregar al carrito
+        </button>
+
+        <!-- Carrito -->
+        <div class="cart-section" id="cartSection" style="display:none;">
+            <div class="cart-header">
+                <span class="cart-title">
+                    🛒 Tu pedido
+                    <span class="cart-count" id="cartCount">0</span>
+                </span>
+                <button onclick="vaciarCarrito()" style="background:none;border:none;font-size:.72rem;color:var(--textMuted);cursor:pointer;font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;">Vaciar</button>
+            </div>
+            <div id="cartItems">
+                <div class="cart-empty">Aún no hay pizzas en el carrito</div>
+            </div>
+            <div class="cart-total-row" id="cartTotalRow" style="display:none;">
+                <span>Total pedido</span><strong id="cartTotal">$0.00</strong>
+            </div>
         </div>
 
     </div><!-- /body-wrap -->
 
     <!-- STICKY FOOTER -->
     <div class="footer">
-        <button class="order-btn" onclick="procesarPedido()">
+        <button class="order-btn" id="orderBtn" onclick="procesarPedido()" style="display:none;">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-            Pedir por WhatsApp
+            Enviar pedido por WhatsApp
         </button>
+        <div id="footerHint" style="text-align:center;padding:14px 0 10px;font-size:.78rem;color:var(--textMuted);font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;">
+            Configura tu pizza y agrégala al carrito
+        </div>
     </div>
 
 </div><!-- /container -->
@@ -921,8 +1036,374 @@
 </div>
 
 <script>
-    const fmt        = v => '$' + v.toFixed(2);
-    const WA_NUMBER  = '584146814858';
+    const fmt       = v => '$' + v.toFixed(2);
+    const WA_NUMBER = '584146814858';
+
+    const PIZZA_PRICES = {
+        'Tradicional':  [3, 6, 8, 10, 14],
+        '4 Estaciones': [5, 9, 12, 13, 16],
+        'Especial':     [6, 11, 14, 18, 22],
+        'Apetitosa':    [4.5, 9, 11, 13, 16],
+        'Favorita':     [6, 11, 14, 18, 20],
+    };
+    const EXTRA_PRICES = {
+        'Aceitunas':     [0.5, 1, 1.5, 2, 3],
+        'Borde de Queso':[0.5, 1, 1.5, 2, 3],
+        'Carne':         [1, 2, 2, 3, 4],
+        'Champiñón':     [0.5, 1, 1.5, 2, 3],
+        'Doble Queso':   [0.5, 1, 1.5, 2, 3],
+        'Maíz':          [0.5, 1, 1, 1.5, 2],
+        'Pepperoni':     [0.5, 1, 1.5, 2, 3],
+        'Pollo':         [1, 2, 2, 3, 4],
+        'Tocineta':      [0.5, 1, 1.5, 2, 3],
+        'Vegetales':     [0.5, 1, 1, 1.5, 2],
+    };
+    const SIZE_INDEX = { 'Mini':0, 'Mediana':1, 'Grande':2, 'Tamaño JyK':3, 'Extra Familiar':4 };
+
+    const INGREDIENTS = [
+        { id:'ei1', value:'Pepperoni', svg:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="9.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/>'},
+        { id:'ei2', value:'Maíz',      svg:'<path d="M12 21C9 21 7 17 7 13C7 8 9 4 12 3C15 4 17 8 17 13C17 17 15 21 12 21Z"/><line x1="9.5" y1="8" x2="14.5" y2="8"/><line x1="9" y1="11" x2="15" y2="11"/>'},
+        { id:'ei3', value:'Tocineta',  svg:'<path d="M3 7Q6 5 9 8Q12 11 15 8Q18 5 21 7"/><path d="M3 12Q6 10 9 13Q12 16 15 13Q18 10 21 12"/>'},
+        { id:'ei4', value:'Aceitunas', svg:'<ellipse cx="12" cy="14" rx="5" ry="6.5"/><circle cx="12" cy="14" r="1.8" fill="currentColor" stroke="none"/>'},
+        { id:'ei5', value:'Cebolla',   svg:'<path d="M12 3C8 5 5 9 5 14C5 18 8.1 21 12 21C15.9 21 19 18 19 14C19 9 16 5 12 3Z"/>'},
+        { id:'ei6', value:'Pimentón',  svg:'<path d="M12 3C12 3 14 2.5 14 4.5"/><path d="M14 4.5C17.5 4.5 20 8 20 12C20 17 17 21 12 21C7 21 4 17 4 12C4 8 6.5 4.5 10 4.5Z"/>'},
+        { id:'ei7', value:'Champiñón', svg:'<path d="M5 13C5 8.6 8.1 5 12 5C15.9 5 19 8.6 19 13Z"/><line x1="9" y1="13" x2="9" y2="20"/><line x1="15" y1="13" x2="15" y2="20"/><line x1="9" y1="20" x2="15" y2="20"/>'},
+        { id:'ei8', value:'Jamón',     svg:'<rect x="4" y="8" width="16" height="10" rx="3"/><line x1="8" y1="8" x2="8" y2="18" opacity=".4"/><line x1="12" y1="8" x2="12" y2="18" opacity=".4"/>'},
+        { id:'ei9', value:'Pollo',     svg:'<path d="M12 3C9 3 7 5 7 8C7 11 9 13 12 14C15 13 17 11 17 8C17 5 15 3 12 3Z"/><path d="M12 14C8 15 5 17 5 20H19C19 17 16 15 12 14Z"/>'},
+        { id:'ei10',value:'Carne',     svg:'<path d="M3 12C3 8 7 4 12 4C17 4 21 8 21 12"/><path d="M7 16C7 13.8 9.2 12 12 12C14.8 12 17 13.8 17 16C17 18.2 14.8 20 12 20C9.2 20 7 18.2 7 16Z"/>'},
+    ];
+
+    // Build 4 estaciones picker
+    const estWrap = document.getElementById('estWrap');
+    INGREDIENTS.forEach(ing => {
+        estWrap.innerHTML += `<div class="est-item">
+            <input type="checkbox" name="estIngr" id="${ing.id}" value="${ing.value}" onchange="onEstChange()">
+            <label for="${ing.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">${ing.svg}</svg>
+                ${ing.value}
+            </label>
+        </div>`;
+    });
+
+    // ── CARRITO ──
+    let carrito = []; // [{name, size, extras, ingr, price, subtotal}]
+
+    // ── Helpers ──
+    const getSelectedPizza = () => document.querySelector('input[name="pizza"]:checked')?.value ?? 'Tradicional';
+    const getSelectedSize  = () => document.querySelector('input[name="size"]:checked')?.value ?? 'Mini';
+    const getSizeIdx       = () => SIZE_INDEX[getSelectedSize()] ?? 0;
+    const getPizzaPrice    = () => PIZZA_PRICES[getSelectedPizza()]?.[getSizeIdx()] ?? 0;
+    const getExtraPrice    = n  => EXTRA_PRICES[n]?.[getSizeIdx()] ?? 0;
+    const getCheckboxes    = n  => [...document.querySelectorAll(`input[name="${n}"]:checked`)].map(el => el.value);
+    const is4Est           = () => getSelectedPizza() === '4 Estaciones';
+    const isDelivery       = () => document.querySelector('input[name="delivery"]:checked')?.value === 'delivery';
+    const isPickup         = () => document.querySelector('input[name="delivery"]:checked')?.value === 'pickup';
+    const needsBox         = () => isDelivery() || isPickup();
+    const isZelle          = () => document.querySelector('input[name="pago"]:checked')?.value === 'Zelle';
+    const getPayment       = () => document.querySelector('input[name="pago"]:checked')?.value ?? 'Efectivo';
+    const getEstIngredients = () => [...document.querySelectorAll('input[name="estIngr"]:checked')].map(el => el.value);
+
+    function getDelivery() {
+        const v = document.querySelector('input[name="delivery"]:checked')?.value ?? 'sitio';
+        if (v === 'delivery') return { value:'Delivery', price:1, label:'Delivery · Caja' };
+        if (v === 'pickup')   return { value:'Pickup',   price:1, label:'Pickup · Caja' };
+        return { value:'En sitio', price:0, label:'En sitio' };
+    }
+
+    // ── Label updates ──
+    function updatePizzaLabels() {
+        const idx = getSizeIdx();
+        Object.entries(PIZZA_PRICES).forEach(([, prices], i) => {
+            const s = document.getElementById('lp' + (i+1));
+            if (s) s.textContent = fmt(prices[idx]);
+        });
+    }
+    function updateExtraLabels() {
+        const idx = getSizeIdx();
+        ['Aceitunas','Borde de Queso','Carne','Champiñón','Doble Queso','Maíz','Pepperoni','Pollo','Tocineta','Vegetales']
+            .forEach((name, i) => {
+                const s = document.getElementById('ep' + (i+1));
+                if (s) s.textContent = '+' + fmt(EXTRA_PRICES[name][idx]);
+            });
+    }
+    function updateSizeLabels() {
+        const prices = PIZZA_PRICES[getSelectedPizza()] || PIZZA_PRICES['Tradicional'];
+        ['Mini','Mediana','Grande','Tamaño JyK','Extra Familiar'].forEach((sz, i) => {
+            const s = document.getElementById('ls' + (i+1));
+            if (s) s.textContent = fmt(prices[i]);
+        });
+    }
+
+    // ── Event handlers ──
+    function onPizzaChange() {
+        document.getElementById('estPicker').classList.toggle('open', is4Est());
+        calcTotal();
+    }
+    function onDeliveryChange() {
+        document.getElementById('locationPanel').classList.toggle('open', isDelivery());
+        calcTotal();
+    }
+    function onEstChange() {
+        const count = document.querySelectorAll('input[name="estIngr"]:checked').length;
+        const c = document.getElementById('estCounter');
+        c.textContent = count + ' / 4';
+        c.classList.toggle('full', count >= 4);
+        document.querySelectorAll('input[name="estIngr"]').forEach(el => {
+            el.disabled = !el.checked && count >= 4;
+        });
+        calcTotal();
+    }
+
+    // ── GPS Location ──
+    function getGPSLocation() {
+        const btn = document.getElementById('locGpsBtn');
+        if (!navigator.geolocation) { alert('Tu navegador no soporta geolocalización.'); return; }
+        btn.textContent = 'Obteniendo ubicación...';
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                const { latitude: lat, longitude: lng } = pos.coords;
+                document.getElementById('locationText').value = `https://maps.google.com/?q=${lat},${lng}`;
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><polyline points="20 6 9 17 4 12"/></svg> Ubicación obtenida`;
+                btn.classList.add('active');
+            },
+            err => {
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--red)"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Usar mi ubicación GPS`;
+                btn.classList.remove('active');
+                if (err.code === 1) alert('Permiso denegado. Escribe tu dirección manualmente.');
+                else alert('No se pudo obtener la ubicación. Escribe tu dirección manualmente.');
+            },
+            { timeout: 10000 }
+        );
+    }
+
+    // ── Animated counter (breakdown subtotal only) ──
+    let displayedVal = 0, raf = null;
+    function animateTo(target) {
+        if (raf) cancelAnimationFrame(raf);
+        const from = displayedVal, diff = target - from, dur = 300, t0 = performance.now();
+        function step(now) {
+            const p = Math.min((now - t0) / dur, 1);
+            const e = 1 - Math.pow(1 - p, 3);
+            const v = from + diff * e;
+            document.getElementById('priceDisplay').textContent = v.toFixed(2);
+            document.getElementById('bdTotal').textContent = fmt(v);
+            if (p < 1) raf = requestAnimationFrame(step);
+            else displayedVal = target;
+        }
+        requestAnimationFrame(step);
+    }
+
+    // ── Calc current pizza subtotal (breakdown preview) ──
+    function calcTotal() {
+        updatePizzaLabels(); updateExtraLabels(); updateSizeLabels();
+        document.getElementById('locationPanel').classList.toggle('open', isDelivery());
+
+        const extras = getCheckboxes('extra');
+        const rows   = [];
+        let lbl = getSelectedPizza() + ' (' + getSelectedSize() + ')';
+        if (is4Est()) {
+            const g = getEstIngredients();
+            if (g.length) lbl += ': ' + g.join(', ');
+        }
+        rows.push({ label: lbl, price: getPizzaPrice() });
+        extras.forEach(n => rows.push({ label: n, price: getExtraPrice(n) }));
+
+        const sub = rows.reduce((s, r) => s + r.price, 0);
+        document.getElementById('breakdownRows').innerHTML = rows
+            .map(r => `<div class="bd-row"><span>${r.label}</span><strong>${fmt(r.price)}</strong></div>`).join('');
+
+        const d = document.getElementById('priceDisplay');
+        d.classList.remove('bump'); void d.offsetWidth; d.classList.add('bump');
+        animateTo(sub);
+    }
+
+    // ── Agregar pizza al carrito ──
+    function agregarAlCarrito() {
+        const pizza  = getSelectedPizza();
+        const size   = getSelectedSize();
+        const sizeIdx = getSizeIdx();
+        const extras = getCheckboxes('extra');
+        const ingr   = is4Est() ? getEstIngredients() : [];
+
+        if (is4Est() && ingr.length === 0) {
+            alert('Elige al menos 1 ingrediente para la 4 Estaciones.');
+            return;
+        }
+
+        const pizzaP  = PIZZA_PRICES[pizza][sizeIdx];
+        const extrasP = extras.reduce((s, n) => s + (EXTRA_PRICES[n]?.[sizeIdx] ?? 0), 0);
+        const subtotal = pizzaP + extrasP;
+
+        const item = { id: Date.now(), pizza, size, sizeIdx, extras, ingr, subtotal };
+        carrito.push(item);
+        renderCarrito();
+        resetSeleccion();
+
+        // Pop animation on add btn
+        const btn = document.getElementById('addBtn');
+        btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+    }
+
+    // ── Reset form to defaults ──
+    function resetSeleccion() {
+        document.querySelector('input[name="pizza"][value="Tradicional"]').checked = true;
+        document.querySelector('input[name="size"][value="Mini"]').checked = true;
+        document.querySelectorAll('input[name="extra"]:checked').forEach(el => el.checked = false);
+        document.querySelectorAll('input[name="estIngr"]:checked').forEach(el => el.checked = false);
+        document.getElementById('estCounter').textContent = '0 / 4';
+        document.getElementById('estCounter').classList.remove('full');
+        document.querySelectorAll('input[name="estIngr"]').forEach(el => el.disabled = false);
+        document.getElementById('estPicker').classList.remove('open');
+        calcTotal();
+    }
+
+    // ── Render carrito ──
+    function renderCarrito() {
+        const section = document.getElementById('cartSection');
+        const itemsEl = document.getElementById('cartItems');
+        const countEl = document.getElementById('cartCount');
+        const totalRowEl = document.getElementById('cartTotalRow');
+        const cartTotalEl = document.getElementById('cartTotal');
+        const orderBtn = document.getElementById('orderBtn');
+        const footerHint = document.getElementById('footerHint');
+
+        section.style.display = carrito.length ? '' : 'none';
+        countEl.textContent = carrito.length;
+
+        if (!carrito.length) {
+            itemsEl.innerHTML = '<div class="cart-empty">Aún no hay pizzas en el carrito</div>';
+            totalRowEl.style.display = 'none';
+            orderBtn.style.display = 'none';
+            footerHint.style.display = '';
+            return;
+        }
+
+        itemsEl.innerHTML = carrito.map((item, idx) => {
+            let detail = item.size;
+            if (item.ingr.length) detail += ' · ' + item.ingr.join(', ');
+            if (item.extras.length) detail += ' · +' + item.extras.join(', +');
+            return `<div class="cart-item">
+                <div class="cart-item-icon">🍕</div>
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.pizza}</div>
+                    <div class="cart-item-detail">${detail}</div>
+                </div>
+                <div class="cart-item-price">${fmt(item.subtotal)}</div>
+                <button class="cart-item-del" onclick="eliminarItem(${idx})" title="Eliminar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>`;
+        }).join('');
+
+        const totalPizzas = carrito.reduce((s, it) => s + it.subtotal, 0);
+        cartTotalEl.textContent = fmt(totalPizzas);
+        totalRowEl.style.display = '';
+        orderBtn.style.display = '';
+        footerHint.style.display = 'none';
+
+        // Scroll to cart
+        section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function eliminarItem(idx) {
+        carrito.splice(idx, 1);
+        renderCarrito();
+    }
+    function vaciarCarrito() {
+        if (!carrito.length) return;
+        if (confirm('¿Vaciar el carrito?')) { carrito = []; renderCarrito(); }
+    }
+
+    // ── Build WhatsApp message ──
+    function buildWAMsg(clientName, phone, delivery, location, pago) {
+        let msg = '🍕 *Pedido Pizzería JyK*\n\n';
+        if (clientName) msg += `👤 *Cliente:* ${clientName}\n`;
+        if (phone)       msg += `📞 *Teléfono:* ${phone}\n`;
+        msg += '\n';
+
+        carrito.forEach((item, i) => {
+            msg += `*Pizza ${i+1}: ${item.pizza} — ${item.size}*\n`;
+            if (item.ingr.length)   msg += `  Ingredientes: ${item.ingr.join(', ')}\n`;
+            if (item.extras.length) msg += `  Adicionales: ${item.extras.join(', ')}\n`;
+            msg += `  Subtotal: ${fmt(item.subtotal)}\n\n`;
+        });
+
+        const totalPizzas = carrito.reduce((s, it) => s + it.subtotal, 0);
+        const zelleExtra  = isZelle() ? 1 : 0;
+        const boxPrice    = needsBox() ? 1 : 0;
+        const total       = totalPizzas + boxPrice + zelleExtra;
+
+        msg += `📦 *Entrega:* ${delivery.value}${boxPrice ? ' (+$1.00 caja)' : ''}\n`;
+        if (isDelivery() && location) msg += `📍 *Ubicación:* ${location}\n`;
+        msg += `💳 *Pago:* ${pago}${pago === 'Zelle' ? ' (+$1.00 recargo)' : ''}\n`;
+        msg += `\n💰 *TOTAL: ${fmt(total)}*`;
+        return msg;
+    }
+
+    // ── Process order ──
+    function procesarPedido() {
+        if (!carrito.length) { alert('Agrega al menos una pizza al carrito.'); return; }
+
+        const nameEl  = document.getElementById('clientName');
+        const lastEl  = document.getElementById('clientLastName');
+        const phoneEl = document.getElementById('clientPhone');
+        const name    = nameEl.value.trim();
+        const last    = lastEl.value.trim();
+        const phone   = phoneEl.value.trim();
+
+        let valid = true;
+        [nameEl, lastEl].forEach(el => el.classList.remove('error'));
+        if (!name) { nameEl.classList.add('error'); valid = false; }
+        if (!last) { lastEl.classList.add('error'); valid = false; }
+
+        const locEl = document.getElementById('locationText');
+        locEl.classList.remove('error');
+        if (isDelivery() && !locEl.value.trim()) { locEl.classList.add('error'); valid = false; }
+
+        if (!valid) {
+            document.querySelector('.error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        const clientName = name + ' ' + last;
+        const delivery   = getDelivery();
+        const location   = locEl.value.trim();
+        const pago       = getPayment();
+        const zelleExtra = isZelle() ? 1 : 0;
+        const boxPrice   = needsBox() ? 1 : 0;
+        const totalPizzas = carrito.reduce((s, it) => s + it.subtotal, 0);
+        const total = totalPizzas + boxPrice + zelleExtra;
+
+        // Build modal summary
+        let html = `<div class="m-row"><span>Cliente</span><strong>${clientName}${phone ? ' · ' + phone : ''}</strong></div>`;
+        carrito.forEach((item, i) => {
+            let detail = item.size;
+            if (item.ingr.length)   detail += ', ' + item.ingr.join(', ');
+            if (item.extras.length) detail += ' +' + item.extras.join(', +');
+            html += `<div class="m-row"><span>Pizza ${i+1}</span><strong>${item.pizza} · ${detail} · ${fmt(item.subtotal)}</strong></div>`;
+        });
+        html += `<div class="m-row"><span>Entrega</span><strong>${delivery.value}${boxPrice ? ' · $1.00' : ''}</strong></div>`;
+        if (isDelivery() && location) html += `<div class="m-row"><span>Ubicación</span><strong>${location.slice(0,45)}${location.length>45?'…':''}</strong></div>`;
+        html += `<div class="m-row"><span>Pago</span><strong>${pago}${zelleExtra ? ' · +$1.00' : ''}</strong></div>`;
+
+        document.getElementById('summaryContent').innerHTML = html;
+        document.getElementById('modalTotal').textContent = fmt(total);
+
+        const waMsg = buildWAMsg(clientName, phone, delivery, location, pago);
+        document.getElementById('waLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`;
+        document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function cerrarModal(e) {
+        if (e.target.id === 'modalOverlay') e.target.classList.remove('open');
+    }
+
+    document.getElementById('clientName').addEventListener('input', function(){ this.classList.remove('error'); });
+    document.getElementById('clientLastName').addEventListener('input', function(){ this.classList.remove('error'); });
+    document.getElementById('locationText').addEventListener('input', function(){ this.classList.remove('error'); });
+
+    calcTotal();
+</script>
 
     const PIZZA_PRICES = {
         'Tradicional':  [3, 6, 8, 10, 14],
